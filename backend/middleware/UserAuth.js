@@ -1,5 +1,5 @@
 const User = require("../models/User");
-
+const jwt = require('jsonwebtoken');
 const saveUser = async (req, res, next) => {
     try {
         const username = await User.findOne({
@@ -10,7 +10,7 @@ const saveUser = async (req, res, next) => {
         if (username) {
             return res.status(409).send('Username already taken!!');
         }
-        
+
         const emailcheck = await User.findOne({
             where: {
                 email: req.body.email
@@ -19,12 +19,27 @@ const saveUser = async (req, res, next) => {
         if (emailcheck) {
             return res.status(409).send('User Exists with this email');
         }
-        
+
         next();
     } catch (error) {
-        console.error(error); 
+        console.error(error);
         res.status(500).send('Internal Server Error');
     }
 };
 
-module.exports = { saveUser };
+const verifyToken = (req, res, next) => {
+    const token = req.cookies.jwt;
+
+    if (!token) {
+        return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.secretKey);
+        req.user = decoded;
+        next();
+    } catch (error) {
+        res.status(403).json({ message: "Invalid token" });
+    }
+};
+module.exports = { saveUser, verifyToken };

@@ -18,10 +18,10 @@ const signUp = async (req, res) => {
             res.cookie('jwt', token, { maxAge: 1 * 24 * 60 * 60, httpOnly: true });
             console.log("user", JSON.stringify(user, null, 2));
             console.log(token);
-            return res.status(201).send(user);
+            return res.status(201).json({ user: user });
         }
         else {
-            return res.status(409).send("Details are not correct");
+            return res.status(409).json({ Message: "Details are not correct" });
         }
     }
     catch (err) {

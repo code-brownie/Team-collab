@@ -29,12 +29,9 @@ ChartJS.register(
 const Dashboard = () => {
   return (
     <div className="dashboard-container p-6 bg-gray-100 min-h-screen">
-      {/* Dashboard Heading */}
       <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center lg:text-left">
         Dashboard
       </h1>
-
-      {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {summaryData.map((card, index) => (
           <SummaryCard
@@ -51,7 +48,6 @@ const Dashboard = () => {
       <div className="bg-white p-6 shadow rounded mb-8">
         <h3 className="text-xl font-bold mb-4">Task Overview</h3>
         <div className="flex flex-col lg:flex-row justify-between items-center space-y-6 lg:space-y-0">
-          {/* Doughnut Chart */}
           <div className="flex flex-col items-center">
             <div className="w-40 h-40">
               <Doughnut
