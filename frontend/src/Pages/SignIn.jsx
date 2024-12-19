@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const SignIn = () => {
   return (
@@ -18,7 +19,7 @@ const SignIn = () => {
             <input
               type="email"
               id="email"
-              className="mt-2 block w-full rounded-md border-gray-300 text-lg p-3 shadow-sm focus:outline-none focus:border-indigo-500"
+              className="mt-2 block w-full rounded-md border-gray-500 text-lg p-3 shadow-sm focus:outline-none focus:border-indigo-500"
               placeholder="Enter your email"
             />
           </div>
@@ -34,7 +35,7 @@ const SignIn = () => {
             <input
               type="password"
               id="password"
-              className="mt-2 block w-full rounded-md border-gray-300 text-lg p-3 shadow-sm focus:outline-none focus:border-indigo-500"
+              className="mt-2 block w-full rounded-md border-gray-500 text-lg p-3 shadow-sm focus:outline-none focus:border-indigo-500"
               placeholder="Enter your password"
             />
             <a
@@ -59,12 +60,12 @@ const SignIn = () => {
           <div className="mt-8 text-center">
             <p className="text-lg text-gray-700">
               Need an account?{" "}
-              <a
-                href="#"
+              <Link
+                to="/signUp"
                 className="font-medium text-yellow-500 hover:underline"
               >
                 Sign up
-              </a>
+              </Link>
             </p>
           </div>
         </form>

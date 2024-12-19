@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const SignUp = () => {
   return (
@@ -18,7 +19,7 @@ const SignUp = () => {
             <input
               type="text"
               id="name"
-              className="mt-2 block w-full rounded-md border-gray-300 text-lg p-3 shadow-sm focus:outline-none focus:border-indigo-500"
+              className="mt-2 block w-full rounded-md border-gray-400 text-lg p-3 shadow-sm focus:outline-none focus:border-indigo-500"
               placeholder="Enter your full name"
             />
           </div>
@@ -36,7 +37,7 @@ const SignUp = () => {
               <input
                 type="email"
                 id="email"
-                className="mt-2 block w-full rounded-md border-gray-300 text-lg p-3 shadow-sm focus:outline-none focus:border-indigo-500"
+                className="mt-2 block w-full rounded-md border-gray-400 text-lg p-3 shadow-sm focus:outline-none focus:border-indigo-500"
                 placeholder="Enter your email"
               />
             </div>
@@ -52,7 +53,7 @@ const SignUp = () => {
               <input
                 type="password"
                 id="password"
-                className="mt-2 block w-full rounded-md border-gray-300 text-lg p-3 shadow-sm focus:outline-none focus:border-indigo-500"
+                className="mt-2 block w-full rounded-md border-gray-400 text-lg p-3 shadow-sm focus:outline-none focus:border-indigo-500"
                 placeholder="Create a password"
               />
             </div>
@@ -69,7 +70,7 @@ const SignUp = () => {
             <input
               type="password"
               id="confirm-password"
-              className="mt-2 block w-full rounded-md border-gray-300 text-lg p-3 shadow-sm focus:outline-none focus:border-indigo-500"
+              className="mt-2 block w-full rounded-md border-gray-400 text-lg p-3 shadow-sm focus:outline-none focus:border-indigo-500"
               placeholder="Confirm your password"
             />
           </div>
@@ -88,12 +89,12 @@ const SignUp = () => {
           <div className="mt-8 text-center">
             <p className="text-lg text-gray-700">
               Already have an account?{" "}
-              <a
-                href="#"
+              <Link
+                to="/signIn"
                 className="font-medium text-yellow-500 hover:underline"
               >
                 Sign in
-              </a>
+              </Link>
             </p>
           </div>
         </form>

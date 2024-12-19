@@ -24,7 +24,8 @@ export default [
       'react-refresh': reactRefresh,
     },
     rules: {
-      'no-unused-vars': 'off',
+      "react/forbid-prop-types": 0 ,
+      'no-unused-vars': "off",
       ...js.configs.recommended.rules,
       ...react.configs.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
