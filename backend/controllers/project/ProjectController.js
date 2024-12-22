@@ -10,7 +10,6 @@ const CreateProject = async (req, res) => {
                 teamId: teamId
             }
         });
-        console.log('hello world')
         if (ifProjectExist) {
             return res.status(409).json({ message: 'Project already exists' })
         }

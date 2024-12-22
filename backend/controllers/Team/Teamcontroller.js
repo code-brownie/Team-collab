@@ -5,6 +5,7 @@ const TeamUser = require("../../models/TeamUser");
 const TeamCreation = async (req, res) => {
     try {
         const { name, description, adminId } = req.body;
+        console.log('req', req.body);
         // Check if the team exists
         const ifExist = await Team.findOne({
             where: {
@@ -41,26 +42,22 @@ const TeamCreation = async (req, res) => {
 const AddUsersToTeam = async (req, res) => {
     const { teamId } = req.params;
     const { users } = req.body;
-
+    console.log('users', users);
     try {
 
         if (!Array.isArray(users)) {
             return res.status(400).json({ error: 'Users must be an array.' });
         }
 
-
-        const userIds = users.map(user => user.userId);
-        console.log(userIds);
-
         // Fetch existing users already linked to the team
         const existingTeamUsers = await TeamUser.findAll({
             where: {
                 TeamId: teamId,
-                UserId: userIds 
+                UserId: users
             },
         });
 
-    
+
         const existingUserIds = existingTeamUsers.map(record => record.UserId);
 
 
@@ -73,10 +70,10 @@ const AddUsersToTeam = async (req, res) => {
 
         const teamUsersToAdd = newUsers.map(user => ({
             TeamId: teamId,
-            UserId: user.userId,
+            UserId: user,
             role: user.role || 'Member'
         }));
-
+        console.log(teamUsersToAdd,'aman');
         await TeamUser.bulkCreate(teamUsersToAdd);
 
         res.status(201).json({

@@ -10,7 +10,7 @@ const Project = () => {
             {/* Header Section */}
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold text-gray-800">Your Projects</h1>
-                <Link className="flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-sm rounded-lg hover:bg-gray-700" to="/create-team">
+                <Link className="flex items-center px-4 py-2 bg-gray-900 text-white font-medium text-sm rounded-lg hover:bg-gray-700" to="/create-project">
                     <span className="mr-2 text-lg">+</span> Create Project
                 </Link>
             </div>

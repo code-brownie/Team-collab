@@ -1,19 +1,15 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 const SignIn = () => {
-  const { user } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  useEffect(() => {
-    if (user) {
-      window.location.href = '/dashboard';
-    }
-  }, [user]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   // Handle input changes
@@ -24,6 +20,8 @@ const SignIn = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
 
     try {
       const response = await fetch("http://localhost:3000/api/users/signin", {
@@ -31,23 +29,27 @@ const SignIn = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // Important for sending cookies
         body: JSON.stringify(formData),
       });
 
       const data = await response.json();
 
       if (response.ok) {
+        console.log(data.token);
+        login(data.token); // Save token to context
         alert("Login successful!");
-        navigate("/dashboard"); // Redirect to dashboard or another page
+        navigate("/dashboard"); // Redirect to dashboard
       } else {
         setError(data.message || "Invalid email or password.");
       }
     } catch (error) {
       console.error("Error during login:", error);
       setError("An unexpected error occurred.");
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <div className="w-full max-w-md bg-white rounded-lg p-8 shadow-lg">
@@ -71,7 +73,7 @@ const SignIn = () => {
           </div>
 
           {/* Password Field */}
-          <div className="mb-6 relative">
+          <div className="mb-6">
             <label htmlFor="password" className="block text-lg font-medium text-gray-700">
               Password
             </label>
@@ -84,9 +86,6 @@ const SignIn = () => {
               placeholder="Enter your password"
               required
             />
-            <a href="#" className="absolute right-0 mt-1 text-sm text-gray-500 hover:underline">
-              Forgot Password?
-            </a>
           </div>
 
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
@@ -95,9 +94,13 @@ const SignIn = () => {
           <div className="mt-8">
             <button
               type="submit"
-              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white text-lg font-semibold py-3 px-4 rounded"
+              disabled={loading}
+              className={`w-full text-white text-lg font-semibold py-3 px-4 rounded ${loading
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-yellow-500 hover:bg-yellow-600"
+                }`}
             >
-              Sign in
+              {loading ? "Signing in..." : "Sign in"}
             </button>
           </div>
 

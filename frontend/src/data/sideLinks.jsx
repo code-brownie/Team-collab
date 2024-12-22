@@ -43,7 +43,7 @@ export const links = [
   },
 
   {
-    id: 2,
+    id: 3,
     name: 'Notifications',
     path: '/notification',
     icon: (
@@ -64,7 +64,7 @@ export const links = [
     ),
   },
   {
-    id: 3,
+    id: 4,
     name: 'Teams',
     path: '/teams',
     icon: (
@@ -85,7 +85,7 @@ export const links = [
     ),
   },
   {
-    id: 4,
+    id: 5,
     name: 'File Sharing',
     path: '/file-sharing',
     icon: (
@@ -106,7 +106,7 @@ export const links = [
     ),
   },
   {
-    id: 5,
+    id: 6,
     name: 'Projects',
     path: '/project',
     icon: (
@@ -127,7 +127,7 @@ export const links = [
     ),
   },
   {
-    id: 6,
+    id: 7,
     name: 'Kanban',
     path: '/kanban',
     icon: (
@@ -148,7 +148,7 @@ export const links = [
     ),
   },
   {
-    id: 7,
+    id: 8,
     name: 'Progress Dashboard',
     path: '/progress-dashboard',
     icon: (
