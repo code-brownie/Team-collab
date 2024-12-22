@@ -4,6 +4,7 @@ const Task = require("../models/Task");
 const Team = require("../models/Team");
 const TeamUser = require("../models/TeamUser");
 const User = require("../models/User");
+const UserProjects = require("../models/UserProjects");
 
 
 User.belongsToMany(Team, { through: TeamUser, foreignKey: 'UserId' });
@@ -14,7 +15,12 @@ Project.hasMany(Task, { foreignKey: 'projectId' });
 Task.belongsTo(Project, { foreignKey: 'projectId' });
 User.hasMany(Task, { foreignKey: 'assignedUserId' });
 Task.belongsTo(User, { foreignKey: 'assignedUserId' });
-
+User.belongsToMany(Project, {
+    through: UserProjects, foreignKey: 'userId', otherKey: 'projectId'
+});
+Project.belongsToMany(User, {
+    through: UserProjects, foreignKey: 'projectId', otherKey: 'userId'
+});
 async function initializeDatabase() {
     try {
         await sequelize.sync({ alter: true });

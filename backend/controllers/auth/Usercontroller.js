@@ -1,6 +1,8 @@
 const User = require("../../models/User");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const Team = require('../../models/Team');
+const Project = require("../../models/Project");
 const signUp = async (req, res) => {
     try {
         const { name, email, password } = req.body;
@@ -75,4 +77,27 @@ const getAllUser = async (req, res) => {
         return res.status(500).send('Error while fetching all user');
     }
 }
-module.exports = { signUp, signIn, getAllUser };
+const getUserProjects = async (req, res) => {
+    const { userId } = req.query;
+    if (!userId) return res.status(404).send('User is required');
+    try {
+        const user = await User.findByPk(userId, {
+            include: [
+                {
+                    model: Project,
+                    through: { attributes: ['dateJoined'] },
+                    include: { model: Team } // Including details from the junction table
+                }
+            ]
+        });
+        if (!user.Projects) {
+            return res.status(200).json({ message: 'No projects found' });
+        }
+        const projects = user.Projects;
+        return res.status(201).json({ projects });
+    } catch (error) {
+        console.log('error', error.message);
+        return res.status(500).send('Internal server error');
+    }
+}
+module.exports = { signUp, signIn, getAllUser, getUserProjects };

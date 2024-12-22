@@ -1,4 +1,5 @@
 const Project = require('../../models/Project');
+const User = require('../../models/User');
 
 const CreateProject = async (req, res) => {
     const { name, teamId, description, deadline } = req.body;
@@ -51,4 +52,31 @@ const GetProjectById = async (req, res) => {
     }
 };
 
-module.exports = { CreateProject, GetProjectById };
+const AddUserToProject = async (req, res) => {
+    const { userId, projectId } = req.body;
+    if (!userId || !projectId) return res.status(404).send('Missing userId or ProjectId');
+    try {
+
+        const user = await User.findByPk(userId);
+        const project = await Project.findByPk(projectId);
+
+        if (user && project) {
+            await user.addProject(project, {
+                through: {
+                    dateJoined: new Date(),
+                },
+            });
+            console.log(`${user.name} added to project ${project.name}`);
+            return res.status(201).json({ message: 'User added to project' })
+        } else {
+            console.log('user or project not found!!');
+            return res.status(404).json({ message: 'User or Project not found' });
+        }
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send('Internal server Error');
+    }
+}
+
+module.exports = { CreateProject, GetProjectById, AddUserToProject };

@@ -8,7 +8,8 @@ import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const MultiStepForm = () => {
-    const { user } = useContext(AuthContext);
+    const { user, setProjectId } = useContext(AuthContext);
+    const userId = user.id;
     const [currentStep, setCurrentStep] = useState(1);
     const [teamData, setTeamData] = useState({ teamName: "", description: "" });
     const [projectData, setProjectData] = useState({
@@ -72,9 +73,19 @@ const MultiStepForm = () => {
             const projectId = newProject.project.id;
             if (project_response.ok) {
                 localStorage.setItem("projectId", projectId);
+                setProjectId(projectId);
                 alert('project created successfully');
+
+                // Add the user to the Project
+                await fetch("http://localhost:3000/api/project/addUsertoProject", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }, body: JSON.stringify({ userId, projectId })
+                });
                 navigate(`/project/${projectId}/overview`);
             }
+
 
         } catch (error) {
             console.log(error);
