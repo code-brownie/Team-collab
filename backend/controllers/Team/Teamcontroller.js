@@ -1,5 +1,6 @@
 const Team = require("../../models/Team");
 const TeamUser = require("../../models/TeamUser");
+const User = require("../../models/User");
 
 // Creating the Team
 const TeamCreation = async (req, res) => {
@@ -42,7 +43,6 @@ const TeamCreation = async (req, res) => {
 const AddUsersToTeam = async (req, res) => {
     const { teamId } = req.params;
     const { users } = req.body;
-    console.log('users', users);
     try {
 
         if (!Array.isArray(users)) {
@@ -61,8 +61,7 @@ const AddUsersToTeam = async (req, res) => {
         const existingUserIds = existingTeamUsers.map(record => record.UserId);
 
 
-        const newUsers = users.filter(user => !existingUserIds.includes(user.userId));
-
+        const newUsers = users.filter(user => !existingUserIds.includes(user));
         // If all users are already in the team
         if (newUsers.length === 0) {
             return res.status(400).json({ error: 'All users are already part of the team.' });
@@ -73,7 +72,6 @@ const AddUsersToTeam = async (req, res) => {
             UserId: user,
             role: user.role || 'Member'
         }));
-        console.log(teamUsersToAdd,'aman');
         await TeamUser.bulkCreate(teamUsersToAdd);
 
         res.status(201).json({
@@ -81,9 +79,40 @@ const AddUsersToTeam = async (req, res) => {
             addedUsers: teamUsersToAdd
         });
     } catch (error) {
-        console.error('Error adding users to the team:', error);
+        // console.error('Error adding users to the team:', error);
         res.status(500).json({ error: 'Failed to add users to the team.' });
     }
 }
+// Get all member of a team
+const getUserofTeam = async (req, res) => {
+    const { teamId } = req.query;
 
-module.exports = { TeamCreation, AddUsersToTeam };
+    if (!teamId) {
+        return res.status(400).send('Please provide the teamId');
+    }
+
+    try {
+        const members = await Team.findOne({
+            where: { id: teamId },
+            include: [
+                {
+                    model: User,
+                    attributes: ['id', 'name', 'email'],
+                    through: { attributes: ['role'] },
+                },
+            ],
+        });
+
+        if (!members) {
+            return res.status(404).send('No team members found');
+        }
+
+        return res.status(200).json({ members });
+    } catch (error) {
+        console.error('Error fetching team members:', error);
+        return res.status(500).send('Internal server error');
+    }
+};
+
+
+module.exports = { TeamCreation, AddUsersToTeam, getUserofTeam };

@@ -4,7 +4,7 @@ import { AuthContext } from "../context/AuthContext";
 
 
 const SignUp = () => {
-  const { setUser } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -40,7 +40,7 @@ const SignUp = () => {
       const data = await response.json();
       if (response.ok) {
         alert("Sign-up successful!");
-        setUser(data.user)
+        login(data.token);
         window.location.href = "/dashboard";
       } else {
         alert(data.message || "Sign-up failed");

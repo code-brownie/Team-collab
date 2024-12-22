@@ -1,16 +1,15 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react'
 import { Link } from 'react-router-dom';
-import { links } from '../data/sideLinks';
+import { links } from '../data/ProjectLinks';
 import CloseButton from './CloseButton';
-
-
-const Sidebar = () => {
+import { AuthContext } from '../context/AuthContext';
+import logo from "../assets/logo.png";
+const ProjectSideBar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
-
+    const { projectId } = useContext(AuthContext);
     const toggleSidebar = () => {
         setIsCollapsed(!isCollapsed);
     };
-
     return (
         <div
             className={`${isCollapsed ? 'w-16' : 'w-64'
@@ -20,9 +19,8 @@ const Sidebar = () => {
             <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200">
                 {!isCollapsed && (
                     <div className="flex items-center">
-
                         <img
-                            src="src/assets/logo.png"
+                            src={logo}
                             alt="Logo"
                             className="w-6 h-6 mr-2"
                         />
@@ -38,7 +36,7 @@ const Sidebar = () => {
                     {links.map((link) => (
                         <li key={link.id}>
                             <Link
-                                to={link.path}
+                                to={link.path.replace(':id', projectId)}
                                 className="flex items-center px-4 py-3 font-semibold text-gray-700 hover:bg-gray-200 rounded-lg transition"
                             >
                                 <span className="mr-3">{link.icon}</span>
@@ -50,6 +48,6 @@ const Sidebar = () => {
             </nav>
         </div>
     );
-};
+}
 
-export default Sidebar;
+export default ProjectSideBar

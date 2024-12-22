@@ -1,9 +1,15 @@
 /* eslint-disable no-unused-vars */
-import React from 'react'
+import React, { useContext } from 'react'
 import { dummyProjects } from '../data/DummyProjects'
 import ProjectCard from '../components/ProjectCard'
 import { Link } from 'react-router-dom'
+import { AuthContext } from "../context/AuthContext";
 const Project = () => {
+
+    const { user } = useContext(AuthContext);
+    // Fetch all the project user is having
+
+
     return (
 
         <div className="p-6 bg-gray-100 min-h-screen">
@@ -17,9 +23,9 @@ const Project = () => {
 
             {/* Projects Grid */}
             <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-                {dummyProjects.map((project) => (
+                {dummyProjects.map((project,index) => (
                     <ProjectCard
-                        key={project.id}
+                        key={index}
                         project={project}
                         team={project.team}
                     />

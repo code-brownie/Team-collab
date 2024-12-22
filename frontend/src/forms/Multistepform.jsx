@@ -28,7 +28,6 @@ const MultiStepForm = () => {
 
     const handleSubmit = async () => {
         const membersId = members.map((member) => member.id);
-        console.log(membersId)
         // create the Team
         try {
             const team_response = await fetch('http://localhost:3000/api/team/createTeam', {
@@ -65,14 +64,16 @@ const MultiStepForm = () => {
                 body: JSON.stringify({
                     name: projectData.projectName,
                     description: projectData.projectDescription,
-                    teamId
+                    teamId,
+                    deadline: projectData.deadline
                 }),
             });
             const newProject = await project_response.json();
-
+            const projectId = newProject.project.id;
             if (project_response.ok) {
+                localStorage.setItem("projectId", projectId);
                 alert('project created successfully');
-                navigate('/dashboard');
+                navigate(`/project/${projectId}/overview`);
             }
 
         } catch (error) {

@@ -6,8 +6,8 @@ const TeamUser = require("../models/TeamUser");
 const User = require("../models/User");
 
 
-User.belongsToMany(Team, { through: TeamUser });
-Team.belongsToMany(User, { through: TeamUser });
+User.belongsToMany(Team, { through: TeamUser, foreignKey: 'UserId' });
+Team.belongsToMany(User, { through: TeamUser, foreignKey: 'TeamId' });
 Team.hasMany(Project, { foreignKey: 'teamId' });
 Project.belongsTo(Team, { foreignKey: 'teamId' });
 Project.hasMany(Task, { foreignKey: 'projectId' });
@@ -23,4 +23,5 @@ async function initializeDatabase() {
         console.error('Error syncing database:', error);
     }
 }
+
 module.exports = initializeDatabase;

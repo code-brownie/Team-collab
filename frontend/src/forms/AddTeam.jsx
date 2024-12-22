@@ -14,7 +14,8 @@ const AddMembersForm = ({ members, setMembers, backStep, handleSubmit }) => {
             try {
                 const response = await fetch("http://localhost:3000/api/users/all");
                 const data = await response.json();
-                setAllUsers(data.user);
+                // console.log('Data in the user', data.users);
+                setAllUsers(data.users);
             } catch (error) {
                 console.error("Error fetching users:", error);
             }

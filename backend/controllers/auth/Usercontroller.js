@@ -63,9 +63,9 @@ const signIn = async (req, res) => {
 };
 const getAllUser = async (req, res) => {
     try {
-        const allUser = await User.findAll();
-        if (allUser) {
-            return res.status(200).json({ user: allUser });
+        const users = await User.findAll();
+        if (users) {
+            return res.status(201).json({ users });
         }
         else {
             return res.status(200).json({ message: 'No user found!!' });
