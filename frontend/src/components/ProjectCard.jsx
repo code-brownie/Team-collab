@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
-import { Link } from 'react-router-dom';
+import { Link} from 'react-router-dom';
     
 const ProjectCard = ({ project, team }) => {
+
     return (
         <div className="bg-white shadow-lg rounded-lg p-6 w-96">
             <div className="flex justify-between items-center mb-4">
@@ -21,7 +22,7 @@ const ProjectCard = ({ project, team }) => {
                 </p>
             </div>
             <Link
-                to={`/projects/${project.id}`}
+                to={`/project/${project.id}/overview`}
                 className="block text-center bg-gray-900 text-white text-sm font-medium py-2 rounded-lg hover:bg-gray-600"
             >
                 View Details

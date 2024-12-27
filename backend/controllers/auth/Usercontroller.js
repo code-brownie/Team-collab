@@ -34,7 +34,6 @@ const signIn = async (req, res) => {
     try {
         const { email, password } = req.body;
         //find a user by email
-
         const user = await User.findOne({
             where: {
                 email: email
@@ -86,7 +85,7 @@ const getUserProjects = async (req, res) => {
                 {
                     model: Project,
                     through: { attributes: ['dateJoined'] },
-                    include: { model: Team } // Including details from the junction table
+                    include: { model: Team }
                 }
             ]
         });

@@ -28,16 +28,13 @@ const saveUser = async (req, res, next) => {
 };
 
 const verifyToken = (req, res, next) => {
-    // Retrieve token from cookies or Authorization header
     const token = req.cookies.jwt || req.headers.authorization?.split(" ")[1];
-    console.log('hello token', token);
     if (!token) {
         return res.status(401).json({ message: "Authentication token missing" });
     }
 
     try {
-        // Verify the token and attach the decoded payload to the request
-        const decoded = jwt.verify(token, process.env.secretKey); // Ensure secret key matches the one used during token creation
+        const decoded = jwt.verify(token, process.env.secretKey);
         req.user = decoded;
         next();
     } catch (error) {
@@ -52,4 +49,5 @@ const verifyToken = (req, res, next) => {
         return res.status(500).json({ message: "An error occurred while verifying the token." });
     }
 };
+
 module.exports = { saveUser, verifyToken };

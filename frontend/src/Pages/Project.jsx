@@ -17,6 +17,7 @@ const Project = () => {
 
         if (response.ok) {
             setProjects(data.projects);
+            console.log('here is the all',data.projects);
         } else {
             alert('Error fetching the Projects');
         }
@@ -51,7 +52,7 @@ const Project = () => {
                         <ProjectCard
                             key={index}
                             project={project}
-                            team={project.Team}  // Accessing the team from the response
+                            team={project.Team}
                         />
                     ))}
                 </div>

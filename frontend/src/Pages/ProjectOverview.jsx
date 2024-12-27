@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Doughnut } from "react-chartjs-2";
 import { AuthContext } from "../context/AuthContext";
 
@@ -8,11 +8,11 @@ const ProjectOverview = () => {
     const [loading, setLoading] = useState(true);
     const [members, setMembers] = useState([]);
     const navigate = useNavigate();
-    const { projectId } = useContext(AuthContext);
-
+    const { setProjectId } = useContext(AuthContext);
+    const { id } = useParams();
     const getProject = async () => {
         try {
-            const response_project = await fetch(`http://localhost:3000/api/project/getOne?projectId=${projectId}`, {
+            const response_project = await fetch(`http://localhost:3000/api/project/getOne?projectId=${id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -51,12 +51,13 @@ const ProjectOverview = () => {
         return `${day}-${month}-${year}`;
     }
     useEffect(() => {
-        if (projectId) {
+        if (id) {
+            setProjectId(id);
             getProject();
         } else {
             console.error("No projectId available in context");
         }
-    }, [projectId, navigate]);
+    }, [id]);
 
     if (loading) {
         return <div>Loading...</div>;

@@ -1,6 +1,7 @@
 const Project = require('../../models/Project');
 const User = require('../../models/User');
-
+const TeamUser = require('../../models/TeamUser');
+const Team = require('../../models/Team');
 const CreateProject = async (req, res) => {
     const { name, teamId, description, deadline } = req.body;
     console.log(deadline);
@@ -34,13 +35,28 @@ const CreateProject = async (req, res) => {
 
 const GetProjectById = async (req, res) => {
     const { projectId } = req.query;
-    console.log('the id', projectId);
     if (!projectId) {
         return res.status(400).json({ error: "Project ID is required." });
     }
 
     try {
-        const project = await Project.findByPk(projectId);
+        const project = await Project.findByPk(projectId, {
+            include: [
+                {
+                    model: Team,
+                    attributes: ['id', 'name'],
+                    include: [
+                        {
+                            model: User,
+                            attributes: ['id', 'name', 'email'],
+                            through: {
+                                attributes: ['role'],
+                            },
+                        },
+                    ],
+                }
+            ]
+        });
 
         if (!project) {
             return res.status(404).json({ error: "Project not found." });

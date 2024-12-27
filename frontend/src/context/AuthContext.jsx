@@ -19,7 +19,6 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const validateToken = async () => {
             if (token) {
-                console.log('token', token)
                 try {
                     const response = await fetch("http://localhost:3000/api/auth/protected", {
                         method: "GET",
@@ -32,17 +31,23 @@ export const AuthProvider = ({ children }) => {
                         const data = await response.json();
                         setUser(data.user);
                     } else {
-                        logout();
+                        // Handle token expiry or invalidation
+                        const errorData = await response.json();
+                        if (errorData.message === "Token expired. Please log in again.") {
+                            logout(); // Clear token and user
+                            alert("Your session has expired. Please log in again.");
+                        }
                     }
                 } catch (error) {
                     console.error("Error validating token:", error);
-                    logout();
+                    logout(); // Clear token and user
                 }
             }
         };
 
         validateToken();
     }, [token]);
+
 
     // Save the token in localStorage when it changes
     useEffect(() => {

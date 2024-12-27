@@ -9,6 +9,7 @@ import MultiStepForm from "./forms/Multistepform";
 import ProjectLayout from "./Layout/ProjectLayout";
 import DashboardLayout from "./Layout/DashboardLayout";
 import ProjectOverview from "./Pages/ProjectOverview";
+import KanbanBoard from "./Pages/KanbanBoard";
 function App() {
 
   return (
@@ -25,8 +26,10 @@ function App() {
           <Route path="/create-project" element={<MultiStepForm />} />
         </Route>
         <Route element={<ProjectLayout />}>
+          {/* <Route path="/project/overview" element={<ProjectOverview />} /> */}
           <Route path="/project/:id/overview" element={<ProjectOverview />} />
           <Route path="/project/:id/task" element={<Task />} />
+          <Route path="/project/:id/kanban" element={<KanbanBoard />} />
         </Route>
       </Routes>
     </>

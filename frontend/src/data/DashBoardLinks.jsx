@@ -22,28 +22,6 @@ export const links = [
   },
   {
     id: 2,
-    name: 'Tasks',
-    path: '/task',
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-5 w-5"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M8 6h13M8 12h13m-7 6h7M3 6h.01M3 12h.01M3 18h.01"
-        />
-      </svg>
-    ),
-  },
-
-  {
-    id: 3,
     name: 'Notifications',
     path: '/notification',
     icon: (
@@ -64,7 +42,7 @@ export const links = [
     ),
   },
   {
-    id: 4,
+    id: 3,
     name: 'Teams',
     path: '/teams',
     icon: (
@@ -85,7 +63,7 @@ export const links = [
     ),
   },
   {
-    id: 5,
+    id: 4,
     name: 'File Sharing',
     path: '/file-sharing',
     icon: (
@@ -106,7 +84,7 @@ export const links = [
     ),
   },
   {
-    id: 6,
+    id: 5,
     name: 'Projects',
     path: '/project',
     icon: (
@@ -122,48 +100,6 @@ export const links = [
           strokeLinejoin="round"
           strokeWidth="2"
           d="M12 8v4l3 3M12 12a9 9 0 100-18 9 9 0 000 18z"
-        />
-      </svg>
-    ),
-  },
-  {
-    id: 7,
-    name: 'Kanban',
-    path: '/kanban',
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-5 w-5"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M8 16h8m-4-8h8m-8 8h4"
-        />
-      </svg>
-    ),
-  },
-  {
-    id: 8,
-    name: 'Progress Dashboard',
-    path: '/progress-dashboard',
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-5 w-5"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M5 13l4 4L19 7"
         />
       </svg>
     ),
