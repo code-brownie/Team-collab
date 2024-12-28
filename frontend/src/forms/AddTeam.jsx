@@ -1,8 +1,11 @@
 /* eslint-disable react/prop-types */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 const AddMembersForm = ({ members, setMembers, backStep, handleSubmit }) => {
+    const { userId } = useContext(AuthContext);
+    const UserId = userId.id;
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [allUsers, setAllUsers] = useState([]);
@@ -14,8 +17,8 @@ const AddMembersForm = ({ members, setMembers, backStep, handleSubmit }) => {
             try {
                 const response = await fetch("http://localhost:3000/api/users/all");
                 const data = await response.json();
-                // console.log('Data in the user', data.users);
-                setAllUsers(data.users);
+                const filteredUsers = data.users.filter((user) => user.id !== UserId);
+                setAllUsers(filteredUsers);
             } catch (error) {
                 console.error("Error fetching users:", error);
             }
@@ -27,7 +30,6 @@ const AddMembersForm = ({ members, setMembers, backStep, handleSubmit }) => {
     const handleSearch = (e) => {
         const term = e.target.value.trim();
         setSearchTerm(term);
-        console.log(allUsers);
         if (term) {
             setSearching(true);
             const timeoutId = setTimeout(() => {

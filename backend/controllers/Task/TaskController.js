@@ -1,6 +1,6 @@
-const { where } = require("sequelize");
 const Project = require("../../models/Project");
 const Task = require("../../models/Task");
+const Team = require("../../models/Team");
 const TeamUser = require('../../models/TeamUser');
 
 // Create the Task
@@ -93,10 +93,34 @@ const UpdateTask = async (req, res) => {
             }
         });
         console.log(updatedTask);
-        return res.status(201).json({updatedTask});
+        return res.status(201).json({ updatedTask });
     } catch (error) {
         console.log(error.message);
         return res.status(500).send('Internal server error');
     }
 }
-module.exports = { createTask, AllTask, TaskByUser,UpdateTask };
+const getTaskById = async (req, res) => {
+    const { id } = req.query;
+    if (!id) return res.status(404).send('Please provide the UserId');
+    try {
+        const Tasks = await Task.findAll({
+            where: {
+                assignedUserId: id
+            },
+            include: {
+                model: Project,
+                attributes: ['teamId','name'],
+                include: {
+                    model: Team,
+                    attributes: ['name']
+                }
+            }
+        });
+        if (!Tasks) return res.status(200).send('No Task Found!');
+
+        return res.status(200).json({ Tasks });
+    } catch (error) {
+        return res.status(500).send('Internal Server Error');
+    }
+}
+module.exports = { createTask, AllTask, TaskByUser, UpdateTask, getTaskById };
