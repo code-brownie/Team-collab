@@ -7,17 +7,16 @@ import { AuthContext } from "../context/AuthContext";
 const Project = () => {
     const [Projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { user } = useContext(AuthContext);
+    const { userId } = useContext(AuthContext);
 
     // Fetch all the projects user is associated with
     const getProjects = async () => {
         setLoading(true);
-        const response = await fetch(`http://localhost:3000/api/users/getProjects?userId=${user.id}`);
+        const response = await fetch(`http://localhost:3000/api/users/getProjects?userId=${userId.id}`);
         const data = await response.json();
 
         if (response.ok) {
             setProjects(data.projects);
-            console.log('here is the all',data.projects);
         } else {
             alert('Error fetching the Projects');
         }
@@ -25,10 +24,10 @@ const Project = () => {
     }
 
     useEffect(() => {
-        if (user) {
+        if (userId) {
             getProjects();
         }
-    }, [user]);
+    }, [userId]);
 
     return (
         <div className="p-6 bg-gray-100 min-h-screen">

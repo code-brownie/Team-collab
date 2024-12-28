@@ -1,16 +1,29 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { links } from '../data/DashBoardLinks';
 import CloseButton from './CloseButton';
+import UserProfileSection from './UserProfile';
+import { AuthContext } from '../context/AuthContext';
 
 
 const DashboardSideBar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const { userId, fetchUserDetails, logout, user } = useContext(AuthContext);
+
+    useEffect(() => {
+        if (userId && userId.id) {
+            fetchUserDetails(userId.id);
+        }
+    }, [userId]);
 
     const toggleSidebar = () => {
         setIsCollapsed(!isCollapsed);
     };
 
+    const handleLogout = () => {
+        console.log("User logged out");
+        logout();
+    };
     return (
         <div
             className={`${isCollapsed ? 'w-16' : 'w-64'
@@ -20,7 +33,6 @@ const DashboardSideBar = () => {
             <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200">
                 {!isCollapsed && (
                     <div className="flex items-center">
-
                         <img
                             src="src/assets/logo.png"
                             alt="Logo"
@@ -48,6 +60,16 @@ const DashboardSideBar = () => {
                     ))}
                 </ul>
             </nav>
+
+            {/* User Profile Section */}
+            {user ? (<UserProfileSection
+                isCollapsed={isCollapsed}
+                userAvatar="src/assets/user-avatar.png" // Update with actual avatar URL
+                userName={user.name}
+                onLogout={handleLogout}
+            />) : (
+                <p>Loading...</p>
+            )}
         </div>
     );
 };

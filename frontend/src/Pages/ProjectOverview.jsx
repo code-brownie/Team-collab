@@ -1,12 +1,17 @@
+/* eslint-disable no-unused-vars */
 import { useContext, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Doughnut } from "react-chartjs-2";
 import { AuthContext } from "../context/AuthContext";
 
 const ProjectOverview = () => {
+    const { user } = useContext(AuthContext);
     const [Project, setProject] = useState(null);
     const [loading, setLoading] = useState(true);
     const [members, setMembers] = useState([]);
+    const [task, setTasks] = useState([]);
+    const [totalTasks, setTotalTasks] = useState(0);
+    const [tasksCompleted, setTaskCompleted] = useState(0);
     const navigate = useNavigate();
     const { setProjectId } = useContext(AuthContext);
     const { id } = useParams();
@@ -42,6 +47,42 @@ const ProjectOverview = () => {
             setLoading(false);
         }
     };
+
+    const getTask = async () => {
+        try {
+            const response = await fetch(`http://localhost:3000/api/task/taskforUser?id=${id}&UserId=${user.id}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            const data_Task = await response.json();
+            if (response.ok) {
+                // Group tasks by status
+                const groupedTasks = {
+                    'To Do': [],
+                    'In Progress': [],
+                    'Review': [],
+                    'Done': []
+                };
+                data_Task.Task.forEach(task => {
+                    if (groupedTasks[task.status]) {
+                        groupedTasks[task.status].push(task);
+                    } else {
+                        groupedTasks['To Do'].push(task);
+                    }
+                });
+
+                setTasks(groupedTasks);
+                setTaskCompleted(groupedTasks.Done.length);
+                setTotalTasks(data_Task.Task.length);
+
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     function formatDateToDDMMYYYY(isoDateString) {
         const date = new Date(isoDateString);
         const day = String(date.getDate()).padStart(2, "0");
@@ -51,13 +92,12 @@ const ProjectOverview = () => {
         return `${day}-${month}-${year}`;
     }
     useEffect(() => {
-        if (id) {
+        if (id && user) {
             setProjectId(id);
             getProject();
-        } else {
-            console.error("No projectId available in context");
+            getTask();
         }
-    }, [id]);
+    }, [id, user]);
 
     if (loading) {
         return <div>Loading...</div>;
@@ -66,20 +106,46 @@ const ProjectOverview = () => {
     if (!Project) {
         return <div>Project data not found.</div>;
     }
-
     const chartData = {
-        labels: ["Completed Tasks", "Pending Tasks"],
+        labels: ["Completed", "Pending"],
         datasets: [
             {
-                data: [Project.tasksCompleted, Project.totalTasks - Project.tasksCompleted],
-                backgroundColor: ["#124559", "#598392"],
-                hoverBackgroundColor: ["#45A049", "#FF1744"],
+                data: [tasksCompleted, totalTasks - tasksCompleted],
+                backgroundColor: ["#6366F1", "#A5B4FC"],
+                borderWidth: 0,
             },
         ],
     };
 
     const chartOptions = {
-        cutout: "50%",
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom',
+                labels: {
+                    padding: 20,
+                    boxWidth: 12,
+                    usePointStyle: true,
+                    pointStyle: 'circle',
+                    font: {
+                        size: 14
+                    }
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: (context) => {
+                        const value = context.raw;
+                        const total = tasksCompleted + (totalTasks - tasksCompleted);
+                        const percentage = ((value / total) * 100).toFixed(0);
+                        return `${context.label}: ${value} (${percentage}%)`;
+                    },
+                },
+            },
+        },
+        cutout: "70%",
     };
 
     return (
@@ -87,43 +153,48 @@ const ProjectOverview = () => {
             {/* Header Section */}
             <div className="bg-white shadow rounded-lg p-6 flex flex-col md:flex-row justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-800">{Project.name}</h1>
-                    <p className="text-gray-600 mt-2">{Project.description}</p>
-                    <div className="mt-4 flex space-x-6 text-sm text-gray-500">
+                    <h1 className="text-3xl font-bold text-gray-800">{Project?.name}</h1>
+                    <p className="text-gray-600 mt-2">{Project?.description}</p>
+                    <div className="mt-4 flex flex-wrap gap-4 text-sm text-gray-500">
                         <div>
-                            <span className="font-semibold">Deadline:</span> {formatDateToDDMMYYYY(Project.deadline)}
+                            <span className="font-semibold">Deadline:</span> {formatDateToDDMMYYYY(Project?.deadline)}
                         </div>
                         <div>
-                            <span className="font-semibold">Created:</span> {formatDateToDDMMYYYY(Project.createdAt)}
+                            <span className="font-semibold">Created:</span> {formatDateToDDMMYYYY(Project?.createdAt)}
                         </div>
                         <div>
                             <span className="font-semibold">Progress:</span>{" "}
-                            {((Project.tasksCompleted / Project.totalTasks) * 100).toFixed(0)}%
+                            {((tasksCompleted / totalTasks) * 100).toFixed(0)}%
                         </div>
                     </div>
                 </div>
 
                 <button
                     onClick={() => navigate("/dashboard")}
-                    className="bg-gray-900 text-white px-6 py-2 rounded-lg shadow hover:bg-gray-700 transition"
+                    className="mt-4 md:mt-0 bg-gray-900 text-white px-6 py-2 rounded-lg shadow hover:bg-gray-700 transition"
                 >
                     Back to Dashboard
                 </button>
             </div>
 
             {/* Team Members and Progress Section */}
-            <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6">
-                <div className="bg-white shadow rounded-lg p-6 w-full md:w-1/3 flex justify-center items-center">
-                    <Doughnut data={chartData} options={chartOptions} />
+            <div className="flex flex-col md:flex-row gap-6">
+                <div className="bg-white shadow rounded-lg p-6 w-full md:w-1/3">
+                    <div className="h-64 relative">
+                        <Doughnut data={chartData} options={chartOptions} />
+                    </div>
+                    <div className="mt-4 text-center text-gray-700 font-semibold">
+                        Total Tasks: {totalTasks}
+                    </div>
                 </div>
 
                 <div className="bg-white shadow rounded-lg p-6 w-full md:w-2/3">
                     <h2 className="text-xl font-bold text-gray-800">Team Members</h2>
                     <ul className="mt-4 space-y-2">
-                        {members.Users.map((user) => (
+                        {members?.Users?.map((user) => (
                             <li
                                 key={user.id}
-                                className="flex justify-between items-center border p-4 rounded-lg"
+                                className="flex justify-between items-center border p-4 rounded-lg hover:bg-gray-50 transition"
                             >
                                 <span className="font-semibold">{user.name}</span>
                                 <span className="text-gray-500 text-sm">{user.TeamUser.role}</span>
@@ -135,18 +206,18 @@ const ProjectOverview = () => {
 
             {/* Tasks Summary Section */}
             <div className="bg-white shadow rounded-lg p-6">
-                <h2 className="text-xl font-bold text-gray-800">Tasks</h2>
+                <h2 className="text-xl font-bold text-gray-800">Tasks Progress</h2>
                 <div className="mt-4">
                     <p className="text-gray-600">
-                        <span className="font-semibold">{Project.tasksCompleted}</span> of{" "}
-                        <span className="font-semibold">{Project.totalTasks}</span> tasks
-                        completed.
+                        <span className="font-semibold">{tasksCompleted}</span> of{" "}
+                        <span className="font-semibold">{totalTasks}</span> tasks
+                        completed
                     </p>
-                    <div className="bg-gray-200 rounded-full h-4 w-full mt-2">
+                    <div className="bg-gray-200 rounded-full h-4 w-full mt-2 overflow-hidden">
                         <div
-                            className="bg-green-500 h-4 rounded-full"
+                            className="bg-green-500 h-full rounded-full transition-all duration-300"
                             style={{
-                                width: `${(Project.tasksCompleted / Project.totalTasks) * 100}%`,
+                                width: `${totalTasks > 0 ? (tasksCompleted / totalTasks) * 100 : 0}%`,
                             }}
                         />
                     </div>

@@ -75,8 +75,6 @@ const KanbanBoard = () => {
         if (id && user) {
             getProject();
             getTask();
-        } else {
-            console.error("No projectId available in context");
         }
     }, [id, user]);
 

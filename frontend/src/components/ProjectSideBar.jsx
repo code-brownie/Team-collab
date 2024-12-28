@@ -1,15 +1,32 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { links } from '../data/ProjectLinks';
 import CloseButton from './CloseButton';
 import { AuthContext } from '../context/AuthContext';
 import logo from "../assets/logo.png";
+import UserProfileSection from './UserProfile';
 const ProjectSideBar = () => {
+    const { userId, fetchUserDetails, logout, user, projectId } = useContext(AuthContext);
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const { projectId } = useContext(AuthContext);
+
+    useEffect(() => {
+        if (userId && userId.id) {
+            fetchUserDetails(userId.id);
+        }
+    }, [userId]);
+
+
+
     const toggleSidebar = () => {
         setIsCollapsed(!isCollapsed);
     };
+
+    const handleLogout = () => {
+        console.log("User logged out");
+        logout();
+    };
+
+
     return (
         <div
             className={`${isCollapsed ? 'w-16' : 'w-64'
@@ -46,6 +63,16 @@ const ProjectSideBar = () => {
                     ))}
                 </ul>
             </nav>
+
+            {user ? (<UserProfileSection
+                isCollapsed={isCollapsed}
+                userAvatar="src/assets/user-avatar.png" // Update with actual avatar URL
+                userName={user.name}
+                onLogout={handleLogout}
+            />) : (
+                <p>Loading...</p>
+            )}
+
         </div>
     );
 }

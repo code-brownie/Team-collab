@@ -99,4 +99,17 @@ const getUserProjects = async (req, res) => {
         return res.status(500).send('Internal server error');
     }
 }
-module.exports = { signUp, signIn, getAllUser, getUserProjects };
+const getUserById = async (req, res) => {
+    const { id } = req.query;
+    try {
+        if (!id) return res.status(404).send('Id not provided');
+        const user = await User.findByPk(id, {
+            attributes: { exclude: ['password'] }
+        });
+        if (!user) return res.status(404).send('User Not found');
+        return res.status(200).json({ user });
+    } catch (error) {
+        return res.status(500).send('Internal server error');
+    }
+}
+module.exports = { signUp, signIn, getAllUser, getUserProjects, getUserById };

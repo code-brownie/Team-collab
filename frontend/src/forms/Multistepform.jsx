@@ -8,8 +8,8 @@ import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const MultiStepForm = () => {
-    const { user, setProjectId } = useContext(AuthContext);
-    const userId = user.id;
+    const { userId, setProjectId } = useContext(AuthContext);
+    const UserId = userId.id;
     const [currentStep, setCurrentStep] = useState(1);
     const [teamData, setTeamData] = useState({ teamName: "", description: "" });
     const [projectData, setProjectData] = useState({
@@ -29,6 +29,11 @@ const MultiStepForm = () => {
 
     const handleSubmit = async () => {
         const membersId = members.map((member) => member.id);
+
+        // Include the creator Id also
+        if (!membersId.includes(UserId)) {
+            membersId.push(UserId);
+        }
         // create the Team
         try {
             const team_response = await fetch('http://localhost:3000/api/team/createTeam', {
@@ -39,7 +44,7 @@ const MultiStepForm = () => {
                 body: JSON.stringify({
                     name: teamData.teamName,
                     description: teamData.description,
-                    adminId: user.id
+                    adminId: userId.id
                 }),
             });
             const createdTeam = await team_response.json();
@@ -76,12 +81,12 @@ const MultiStepForm = () => {
                 setProjectId(projectId);
                 alert('project created successfully');
 
-                // Add the user to the Project
+                // Add the users to the Project
                 await fetch("http://localhost:3000/api/project/addUsertoProject", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
-                    }, body: JSON.stringify({ userId, projectId })
+                    }, body: JSON.stringify({ userIds: membersId, projectId })
                 });
                 navigate(`/project/${projectId}/overview`);
             }

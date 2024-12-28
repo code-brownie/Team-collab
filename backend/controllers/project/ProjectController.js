@@ -69,29 +69,42 @@ const GetProjectById = async (req, res) => {
 };
 
 const AddUserToProject = async (req, res) => {
-    const { userId, projectId } = req.body;
-    if (!userId || !projectId) return res.status(404).send('Missing userId or ProjectId');
-    try {
+    const { userIds, projectId } = req.body;
 
-        const user = await User.findByPk(userId);
+    if (!userIds || !projectId) {
+        return res.status(400).send('Missing userIds or projectId');
+    }
+
+    try {
         const project = await Project.findByPk(projectId);
 
-        if (user && project) {
-            await user.addProject(project, {
-                through: {
-                    dateJoined: new Date(),
-                },
-            });
-            console.log(`${user.name} added to project ${project.name}`);
-            return res.status(201).json({ message: 'User added to project' })
-        } else {
-            console.log('user or project not found!!');
-            return res.status(404).json({ message: 'User or Project not found' });
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found' });
         }
 
+        const users = await User.findAll({
+            where: {
+                id: userIds,
+            },
+        });
+
+        if (!users.length) {
+            return res.status(404).json({ message: 'No users found' });
+        }
+
+        await Promise.all(
+            users.map((user) =>
+                user.addProject(project, {
+                    through: { dateJoined: new Date() },
+                })
+            )
+        );
+
+        console.log(`Users added to project ${project.name}`);
+        return res.status(201).json({ message: 'Users added to project' });
     } catch (error) {
-        console.log(error);
-        return res.status(500).send('Internal server Error');
+        console.error(error);
+        return res.status(500).send('Internal Server Error');
     }
 }
 
