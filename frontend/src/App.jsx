@@ -10,6 +10,7 @@ import ProjectLayout from "./Layout/ProjectLayout";
 import DashboardLayout from "./Layout/DashboardLayout";
 import ProjectOverview from "./Pages/ProjectOverview";
 import KanbanBoard from "./Pages/KanbanBoard";
+import TeamsPage from "./Pages/Team";
 function App() {
 
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/project/:id/overview" element={<ProjectOverview />} />
           <Route path="/project/:id/task" element={<Task />} />
           <Route path="/project/:id/kanban" element={<KanbanBoard />} />
+          <Route path="/project/:id/teams" element={<TeamsPage />} />
         </Route>
       </Routes>
     </>

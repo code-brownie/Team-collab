@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import TaskModal from '../components/TaskModal';
+import Modal from '../components/Modal';
 import TaskCreationForm from '../forms/TaskCreationForm';
 import { useParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -198,9 +198,9 @@ const KanbanBoard = () => {
                     Create Task
                 </button>
             </div>
-            <TaskModal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
+            <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)} heading="Create Task">
                 <TaskCreationForm users={users} onSubmit={handleTaskSubmit} setModalOpen={setModalOpen} />
-            </TaskModal>
+            </Modal>
             <div className="grid grid-cols-4 gap-4">
                 {Object.entries(tasks).map(([status, taskList]) => (
                     <div

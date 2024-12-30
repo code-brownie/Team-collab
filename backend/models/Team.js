@@ -15,6 +15,15 @@ const Team = sequelize.define('Team', {
     description: {
         type: DataTypes.TEXT,
     },
+    joinCode: {
+        type: DataTypes.STRING(8),
+        allowNull: false,
+        unique: true,
+        validate: {
+            notEmpty: true,
+            len: [6, 8]
+        }
+    }
 });
 
 module.exports = Team;
