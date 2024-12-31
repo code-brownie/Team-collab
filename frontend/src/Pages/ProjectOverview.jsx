@@ -3,6 +3,7 @@ import { useContext, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Doughnut } from "react-chartjs-2";
 import { AuthContext } from "../context/AuthContext";
+import { toast } from "@/hooks/use-toast";
 
 const ProjectOverview = () => {
     const { user } = useContext(AuthContext);
@@ -42,6 +43,11 @@ const ProjectOverview = () => {
                 setMembers(data_member.members);
             }
         } catch (error) {
+            toast({
+                title: "Error",
+                description: "Failed to fetch project data.",
+                variant: "destructive",
+            });
             console.error("Error fetching project:", error.message);
         } finally {
             setLoading(false);
@@ -79,6 +85,11 @@ const ProjectOverview = () => {
 
             }
         } catch (error) {
+            toast({
+                title: "Error",
+                description: "Failed to fetch Task data.",
+                variant: "destructive",
+            });
             console.log(error);
         }
     };
@@ -164,7 +175,7 @@ const ProjectOverview = () => {
                         </div>
                         <div>
                             <span className="font-semibold">Progress:</span>{" "}
-                            {((tasksCompleted / totalTasks) * 100).toFixed(0)}%
+                            {tasksCompleted != 0 ? ((tasksCompleted / totalTasks) * 100).toFixed(0) : '0'}%
                         </div>
                     </div>
                 </div>

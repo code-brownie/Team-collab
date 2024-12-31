@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useToast } from "@/hooks/use-toast";
 import { createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -6,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+    const { toast } = useToast();
     const [token, setToken] = useState(() => localStorage.getItem("token"));
     const [userId, setUserId] = useState(null);
     const [user, setUser] = useState(null);
@@ -90,7 +92,10 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
         localStorage.removeItem("token");
         localStorage.removeItem("projectId");
-        alert('LoggedOut successfully');
+        toast({
+            title: "Logged out Successfully",
+            variant: "default",
+        });
         navigate('/');
     };
 

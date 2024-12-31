@@ -4,11 +4,13 @@ import { Users, Info } from "lucide-react";
 import Modal from "./Modal";
 import MangeMembers from "./MangeMembers";
 import JoinTeamForm from "../forms/TeamJoinForm";
-
+import AddMember from "../forms/AddMember";
+import { toast } from "@/hooks/use-toast";
 const TeamCard = ({ team, currentUserId, updateTeamMembers }) => {
     const [isModalOpen, setModalOpen] = useState(false);
-    const [teamMembers, setTeamMembers] = useState(team.Users);
+    const [isAddMemberModalOpen, setAddMemberModalOpen] = useState(false);
     const [isJoinModalOpen, setJoinModalOpen] = useState(false);
+    const [teamMembers, setTeamMembers] = useState(team.Users);
     const currentUser = team.Users.find((user) => user.id === currentUserId);
     const currentRole = currentUser?.TeamUser?.role || "Member";
 
@@ -24,18 +26,27 @@ const TeamCard = ({ team, currentUserId, updateTeamMembers }) => {
             });
 
             if (response.ok) {
-                console.log("Members updated successfully");
+                toast({
+                    title: "Team members updated successfully",
+                    variant: "default",
+                });
                 updateTeamMembers(team.id, updatedMembers);
                 setModalOpen(false);
-            } else {
-                console.error("Failed to update members");
             }
         } catch (error) {
+            toast({
+                title: "Error",
+                description: "Failed to update team members.",
+                variant: "destructive",
+            });
             console.error("Error updating members:", error);
         }
     };
     const handleJoinTeam = () => {
         setJoinModalOpen(true);
+    };
+    const handleAddTeam = () => {
+        setAddMemberModalOpen(true);
     };
     const handleManageTeam = () => {
         setModalOpen(true);
@@ -75,6 +86,13 @@ const TeamCard = ({ team, currentUserId, updateTeamMembers }) => {
                         Manage Team
                     </button>
                 )}
+                {currentRole === "Admin" && (
+                    <button
+                        onClick={handleAddTeam}
+                        className="px-4 py-2 text-sm border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-md transition-colors">
+                        Add Memember
+                    </button>
+                )}
             </div>
 
             <Modal
@@ -98,7 +116,21 @@ const TeamCard = ({ team, currentUserId, updateTeamMembers }) => {
                     onClose={() => setJoinModalOpen(false)}
                     onJoinSuccess={(data) => {
                         updateTeamMembers(data.teamId, data.updatedMembers);
+                        toast({
+                            title: "Team joined successfully",
+                            variant: "default",
+                        });
                     }}
+                />
+            </Modal>
+            <Modal
+                isOpen={isAddMemberModalOpen}
+                onClose={() => setAddMemberModalOpen(false)}
+                heading="Add Member"
+            >
+                <AddMember
+                    joinCode={team.joinCode}
+                    onClose={() => setAddMemberModalOpen(false)}
                 />
             </Modal>
         </div>

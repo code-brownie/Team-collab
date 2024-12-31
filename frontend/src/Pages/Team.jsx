@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import TeamCard from "../components/TeamCard";
 import { AuthContext } from "../context/AuthContext";
+import { toast } from "@/hooks/use-toast";
 const TeamsPage = () => {
     const { userId } = useContext(AuthContext);
     const [teamsData, setTeamsData] = useState({ allTeams: [] });
@@ -15,6 +16,11 @@ const TeamsPage = () => {
                 setTeamsData(data);
             }
         } catch (error) {
+            toast({
+                title: "Error",
+                description: "Failed to fetch Team data.",
+                variant: "destructive",
+            });
             console.log(error.message);
         }
     }
@@ -37,7 +43,7 @@ const TeamsPage = () => {
     return (
         <div className="min-h-screen bg-gray-50 py-8 px-4">
             <div className="max-w-7xl mx-auto">
-                <h1 className="text-3xl font-bold text-gray-900 mb-8">My Teams</h1>
+                <h1 className="text-3xl font-bold text-gray-900 mb-8">Teams</h1>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {teamsData.allTeams.map(team => (

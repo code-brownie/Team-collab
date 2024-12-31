@@ -3,8 +3,9 @@ import Modal from '../components/Modal';
 import TaskCreationForm from '../forms/TaskCreationForm';
 import { useParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-
+import { useToast } from '@/hooks/use-toast';
 const KanbanBoard = () => {
+    const { toast } = useToast();
     const [loading, setLoading] = useState(true);
     const { user } = useContext(AuthContext);
     const [users, setUsers] = useState([]);
@@ -32,6 +33,11 @@ const KanbanBoard = () => {
             const data_project = await response_project.json();
             setUsers(data_project.project.Team.Users);
         } catch (error) {
+            toast({
+                title: "Error",
+                description: "Failed to fetch project data.",
+                variant: "destructive",
+            });
             console.error("Error fetching project:", error.message);
         } finally {
             setLoading(false);
@@ -67,6 +73,11 @@ const KanbanBoard = () => {
                 setTasks(groupedTasks);
             }
         } catch (error) {
+            toast({
+                title: "Error",
+                description: "Failed to fetch tasks.",
+                variant: "destructive",
+            });
             console.log(error);
         }
     };
@@ -127,8 +138,18 @@ const KanbanBoard = () => {
             if (!response.ok) {
                 throw new Error('Failed to update task status');
             }
+            toast({
+                title: "Task Updated",
+                description: `Task "${task.title}" moved to ${targetStatus}.`,
+                variant: "default",
+            });
         } catch (error) {
             console.error('Error updating task status:', error);
+            toast({
+                title: "Error",
+                description: "Failed to update task status.",
+                variant: "destructive",
+            });
             // Revert UI state if API call fails
             getTask();
         }
@@ -171,11 +192,20 @@ const KanbanBoard = () => {
             if (!response.ok) {
                 throw new Error('Failed to create task');
             }
-
+            toast({
+                title: "Task Created",
+                description: `Task "${newTask.title}" was successfully created.`,
+                variant: "default",
+            });
             // Refresh tasks after creation
             getTask();
             setModalOpen(false);
         } catch (error) {
+            toast({
+                title: "Error",
+                description: "Failed to create task.",
+                variant: "destructive",
+            });
             console.error('Error creating task:', error);
         }
     };

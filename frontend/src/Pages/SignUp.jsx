@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import { toast } from "@/hooks/use-toast";
 
 
 const SignUp = () => {
@@ -12,7 +13,7 @@ const SignUp = () => {
     confirmPassword: "",
   });
   const [error, setError] = useState('');
-
+  const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
@@ -20,7 +21,11 @@ const SignUp = () => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      toast({
+        title: "Error",
+        description: "Password not match.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -41,14 +46,27 @@ const SignUp = () => {
       if (response.ok) {
         alert("Sign-up successful!");
         login(data.token);
-        window.location.href = "/dashboard";
+        toast({
+          title: "SignUp Successful",
+          description: "Welcome back! Redirecting to your dashboard.",
+          variant: "default",
+        });
+        navigate('/dashboard');
       } else {
-        alert(data.message || "Sign-up failed");
+        toast({
+          title: "SignUp Failed",
+          description: data.message ||"Try again",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error("Error:", error);
       setError(error.message);
-      alert("An error occurred. Please try again.");
+      toast({
+        title: "Unexpected Error",
+        description: "An unexpected error occurred. Please try again later.",
+        variant: "destructive",
+      });
     }
   };
 

@@ -6,6 +6,7 @@ import AddMembersForm from "./AddTeam";
 import Stepper from '../components/Stepper';
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
 
 const MultiStepForm = () => {
     const { userId, setProjectId } = useContext(AuthContext);
@@ -79,7 +80,6 @@ const MultiStepForm = () => {
             if (project_response.ok) {
                 localStorage.setItem("projectId", projectId);
                 setProjectId(projectId);
-                alert('project created successfully');
 
                 // Add the users to the Project
                 await fetch("http://localhost:3000/api/project/addUsertoProject", {
@@ -88,11 +88,21 @@ const MultiStepForm = () => {
                         "Content-Type": "application/json"
                     }, body: JSON.stringify({ userIds: membersId, projectId })
                 });
+                toast({
+                    title: "success",
+                    description: "Project created successfully.",
+                    variant: "default",
+                });
                 navigate(`/project/${projectId}/overview`);
             }
 
 
         } catch (error) {
+            toast({
+                title: "Try again",
+                description: "Failed to create project.",
+                variant: "destructive",
+            });
             console.log(error);
         }
     };

@@ -3,24 +3,35 @@ import React, { useContext, useEffect, useState } from 'react'
 import ProjectCard from '../components/ProjectCard'
 import { Link } from 'react-router-dom'
 import { AuthContext } from "../context/AuthContext";
-
+import { useToast } from '@/hooks/use-toast';
 const Project = () => {
     const [Projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
     const { userId } = useContext(AuthContext);
-
+    const { toast } = useToast();
     // Fetch all the projects user is associated with
     const getProjects = async () => {
         setLoading(true);
-        const response = await fetch(`http://localhost:3000/api/users/getProjects?userId=${userId.id}`);
-        const data = await response.json();
+        try {
 
-        if (response.ok) {
+            const response = await fetch(`http://localhost:3000/api/users/getProjects?userId=${userId.id}`);
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch the projects');
+            }
             setProjects(data.projects);
-        } else {
-            alert('Error fetching the Projects');
         }
-        setLoading(false);
+        catch (error) {
+            toast({
+                title: "Error",
+                description: "Failed to fetch project data.",
+                variant: "destructive",
+            });
+        }
+        finally {
+            setLoading(false);
+        }
     }
 
     useEffect(() => {

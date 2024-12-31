@@ -9,6 +9,7 @@ const userRoutes = require('./routes/UserRoutes');
 const teamRoutes = require('./routes/TeamRoutes');
 const projectRoutes = require('./routes/ProjectRoutes');
 const protectedRoute = require('./routes/Protected');
+const emailRoutes = require('./routes/EmailRoutes');
 app.use(
     cors({
         origin: "http://localhost:5173",
@@ -33,6 +34,7 @@ app.use('/api/team', teamRoutes);
 app.use('/api/project', projectRoutes);
 app.use('/api/task', taskRoutes);
 app.use('/api/auth', protectedRoute);
+app.use('/api/email', emailRoutes);
 
 
 

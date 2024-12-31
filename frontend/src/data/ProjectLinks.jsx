@@ -65,27 +65,6 @@ export const links = [
     },
     {
         id: 4,
-        name: 'Teams',
-        path: 'project/:id/teams',
-        icon: (
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-            >
-                <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M17 8h2a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2v-9a2 2 0 012-2h2m3-3h4m-4 0a3 3 0 106 0m-6 0H7a2 2 0 00-2 2v3h14V7a2 2 0 00-2-2h-3z"
-                />
-            </svg>
-        ),
-    },
-    {
-        id: 5,
         name: 'File Sharing',
         path: 'project/:id/file-sharing',
         icon: (
@@ -106,7 +85,7 @@ export const links = [
         ),
     },
     {
-        id: 6,
+        id: 5,
         name: 'Kanban',
         path: 'project/:id/kanban',
         icon: (

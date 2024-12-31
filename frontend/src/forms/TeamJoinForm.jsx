@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useContext, useState } from "react";
 import { AuthContext } from '../context/AuthContext'
+import { toast } from "@/hooks/use-toast";
 const JoinTeamForm = ({ onClose, onJoinSuccess }) => {
     const [joinCode, setJoinCode] = useState("");
     const [error, setError] = useState("");
@@ -10,7 +11,7 @@ const JoinTeamForm = ({ onClose, onJoinSuccess }) => {
             const response = await fetch("http://localhost:3000/api/team/joinTeam", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ joinCode, userId: userId.id }), // Replace with actual userId
+                body: JSON.stringify({ joinCode, userId: userId.id }),
             });
 
             const data = await response.json();
@@ -21,6 +22,11 @@ const JoinTeamForm = ({ onClose, onJoinSuccess }) => {
                 setError(data.message);
             }
         } catch (error) {
+            toast({
+                title: "Error",
+                description: "Failed to join the Team.",
+                variant: "destructive",
+            });
             console.error("Error joining team:", error);
             setError("An error occurred. Please try again.");
         }

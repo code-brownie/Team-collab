@@ -146,7 +146,6 @@ const getUserofTeam = async (req, res) => {
         return res.status(500).send('Internal server error');
     }
 };
-
 //Get all the Team
 const getAllTeam = async (req, res) => {
     try {

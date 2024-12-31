@@ -24,6 +24,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/task" element={<Task />} />
           <Route path="/project" element={<Project />} />
+          <Route path="/teams" element={<TeamsPage />} />
           <Route path="/create-project" element={<MultiStepForm />} />
         </Route>
         <Route element={<ProjectLayout />}>
@@ -31,7 +32,6 @@ function App() {
           <Route path="/project/:id/overview" element={<ProjectOverview />} />
           <Route path="/project/:id/task" element={<Task />} />
           <Route path="/project/:id/kanban" element={<KanbanBoard />} />
-          <Route path="/project/:id/teams" element={<TeamsPage />} />
         </Route>
       </Routes>
     </>

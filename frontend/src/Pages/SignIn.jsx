@@ -1,14 +1,15 @@
 import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const SignIn = () => {
+  const { toast } = useToast();
   const { login } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -21,7 +22,6 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
 
     try {
       const response = await fetch("http://localhost:3000/api/users/signin", {
@@ -35,16 +35,27 @@ const SignIn = () => {
       const data = await response.json();
 
       if (response.ok) {
-        console.log(data.token);
-        login(data.token); // Save token to context
-        alert("Login successful!");
-        navigate("/dashboard"); // Redirect to dashboard
+        login(data.token);
+        toast({
+          title: "Login Successful",
+          description: "Welcome back! Redirecting to your dashboard.",
+          variant: "default",
+        });
+        navigate("/dashboard");
       } else {
-        setError(data.message || "Invalid email or password.");
+        toast({
+          title: "Login Failed",
+          description: data.message || "Invalid email or password.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error("Error during login:", error);
-      setError("An unexpected error occurred.");
+      toast({
+        title: "Unexpected Error",
+        description: "An unexpected error occurred. Please try again later.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -56,7 +67,6 @@ const SignIn = () => {
         <h2 className="text-3xl font-bold text-center mb-6">Sign in</h2>
 
         <form onSubmit={handleSubmit}>
-          {/* Email Field */}
           <div className="mb-6">
             <label htmlFor="email" className="block text-lg font-medium text-gray-700">
               Email Address
@@ -72,7 +82,6 @@ const SignIn = () => {
             />
           </div>
 
-          {/* Password Field */}
           <div className="mb-6">
             <label htmlFor="password" className="block text-lg font-medium text-gray-700">
               Password
@@ -88,9 +97,6 @@ const SignIn = () => {
             />
           </div>
 
-          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-
-          {/* Sign In Button */}
           <div className="mt-8">
             <button
               type="submit"
@@ -104,7 +110,6 @@ const SignIn = () => {
             </button>
           </div>
 
-          {/* Sign Up Link */}
           <div className="mt-8 text-center">
             <p className="text-lg text-gray-700">
               Need an account?{" "}
