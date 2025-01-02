@@ -1,15 +1,16 @@
 const express = require('express');
+const app = express();
 const cors = require('cors');
 const connectToDB = require('./controllers/database/dbconnect');
 const cookieParser = require('cookie-parser')
-const app = express();
-const router = express.Router();
 const taskRoutes = require('./routes/TaskRoutes');
 const userRoutes = require('./routes/UserRoutes');
 const teamRoutes = require('./routes/TeamRoutes');
 const projectRoutes = require('./routes/ProjectRoutes');
 const protectedRoute = require('./routes/Protected');
 const emailRoutes = require('./routes/EmailRoutes');
+const fileRoutes = require('./routes/FileRoutes');
+const fileUpload = require('express-fileupload');
 app.use(
     cors({
         origin: "http://localhost:5173",
@@ -18,6 +19,10 @@ app.use(
 );
 
 //middleware
+app.use(fileUpload({
+    useTempFiles: true,
+    tempFileDir: '/tmp/',
+}));
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
@@ -35,6 +40,7 @@ app.use('/api/project', projectRoutes);
 app.use('/api/task', taskRoutes);
 app.use('/api/auth', protectedRoute);
 app.use('/api/email', emailRoutes);
+app.use('/api/files', fileRoutes);
 
 
 
