@@ -64,7 +64,7 @@ const DashboardSideBar = () => {
             {/* User Profile Section */}
             {user ? (<UserProfileSection
                 isCollapsed={isCollapsed}
-                userAvatar="src/assets/user-avatar.png" // Update with actual avatar URL
+                // userAvatar="src/assets/user-avatar.png" // Update with actual avatar URL
                 userName={user.name}
                 onLogout={handleLogout}
             />) : (

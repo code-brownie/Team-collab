@@ -12,11 +12,14 @@ import ProjectOverview from "./Pages/ProjectOverview";
 import KanbanBoard from "./Pages/KanbanBoard";
 import TeamsPage from "./Pages/Team";
 import FileSharing from "./Pages/File";
+import RegisterUser from "./components/RegisterToSocket";
+import NotificationList from "./components/NotificationList";
+
 function App() {
 
   return (
     <>
-
+      <RegisterUser />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signIn" element={<SignIn />} />
@@ -34,6 +37,7 @@ function App() {
           <Route path="/project/:id/task" element={<Task />} />
           <Route path="/project/:id/kanban" element={<KanbanBoard />} />
           <Route path="/project/:id/file-sharing" element={<FileSharing />} />
+          <Route path="/project/:id/notification" element={<NotificationList />} />
         </Route>
       </Routes>
     </>

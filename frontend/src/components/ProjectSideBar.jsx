@@ -1,31 +1,32 @@
 import { useContext, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
-import { links } from '../data/ProjectLinks';
-import CloseButton from './CloseButton';
-import { AuthContext } from '../context/AuthContext';
-import logo from "../assets/logo.png";
-import UserProfileSection from './UserProfile';
+import { Link } from 'react-router-dom'
+import { links } from '../data/ProjectLinks'
+import CloseButton from './CloseButton'
+import { AuthContext } from '../context/AuthContext'
+import { NotificationContext } from '../context/NotificationContext'
+import { Badge } from "@/components/ui/badge"
+import logo from "../assets/logo.png"
+import UserProfileSection from './UserProfile'
+
 const ProjectSideBar = () => {
-    const { userId, fetchUserDetails, logout, user, projectId } = useContext(AuthContext);
-    const [isCollapsed, setIsCollapsed] = useState(false);
+    const { userId, fetchUserDetails, logout, user, projectId } = useContext(AuthContext)
+    const { unreadCount } = useContext(NotificationContext)
+    const [isCollapsed, setIsCollapsed] = useState(false)
 
     useEffect(() => {
         if (userId && userId.id) {
-            fetchUserDetails(userId.id);
+            fetchUserDetails(userId.id)
         }
-    }, [userId]);
-
-
+    }, [userId])
 
     const toggleSidebar = () => {
-        setIsCollapsed(!isCollapsed);
-    };
+        setIsCollapsed(!isCollapsed)
+    }
 
     const handleLogout = () => {
-        console.log("User logged out");
-        logout();
-    };
-
+        console.log("User logged out")
+        logout()
+    }
 
     return (
         <div
@@ -54,27 +55,48 @@ const ProjectSideBar = () => {
                         <li key={link.id}>
                             <Link
                                 to={link.path.replace(':id', projectId)}
-                                className="flex items-center px-4 py-3 font-semibold text-gray-700 hover:bg-gray-200 rounded-lg transition"
+                                className="flex items-center px-4 py-3 font-semibold text-gray-700 hover:bg-gray-200 rounded-lg transition group relative"
                             >
                                 <span className="mr-3">{link.icon}</span>
-                                {!isCollapsed && link.name}
+                                {!isCollapsed && (
+                                    <div className="flex items-center justify-between flex-grow">
+                                        <span>{link.name}</span>
+                                        {link.name === 'Notifications' && unreadCount > 0 && (
+                                            <Badge
+                                                variant="secondary"
+                                                className="bg-gray-900 text-white hover:bg-blue-600 ml-2"
+                                            >
+                                                {unreadCount}
+                                            </Badge>
+                                        )}
+                                    </div>
+                                )}
+                                {/* Show badge in collapsed state */}
+                                {isCollapsed && link.name === 'Notifications' && unreadCount > 0 && (
+                                    <Badge
+                                        variant="secondary"
+                                        className="absolute -right-2 -top-2 bg-blue-500 text-white hover:bg-blue-600"
+                                    >
+                                        {unreadCount}
+                                    </Badge>
+                                )}
                             </Link>
                         </li>
                     ))}
                 </ul>
             </nav>
 
-            {user ? (<UserProfileSection
-                isCollapsed={isCollapsed}
-                userAvatar="src/assets/user-avatar.png" // Update with actual avatar URL
-                userName={user.name}
-                onLogout={handleLogout}
-            />) : (
+            {user ? (
+                <UserProfileSection
+                    isCollapsed={isCollapsed}
+                    userName={user.name}
+                    onLogout={handleLogout}
+                />
+            ) : (
                 <p>Loading...</p>
             )}
-
         </div>
-    );
+    )
 }
 
 export default ProjectSideBar

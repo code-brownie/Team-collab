@@ -1,14 +1,19 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
-import { LogOut, User } from 'lucide-react';
+import { LogOut } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
 
 const UserProfileSection = ({
     isCollapsed,
-    userAvatar,
+    userAvatar = null,
     userName,
     onLogout
 }) => {
     const [showLogout, setShowLogout] = useState(false);
+
+    // Get the first letter of the user's name for the fallback
+    const userInitial = userName ? userName.charAt(0).toUpperCase() : '';
 
     return (
         <div className="mt-auto px-4 py-3 border-t border-gray-200"
@@ -18,17 +23,19 @@ const UserProfileSection = ({
                 className="relative"
             >
                 <div className="flex items-center cursor-pointer">
-                    {userAvatar ? (
-                        <img
-                            src={userAvatar}
-                            alt={userName}
-                            className="w-8 h-8 rounded-full object-cover"
-                        />
-                    ) : (
-                        <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                            <User className="w-5 h-5 text-gray-500" />
-                        </div>
-                    )}
+                    <Avatar className="w-8 h-8">
+                        {userAvatar ? (
+                            <AvatarImage
+                                src={userAvatar}
+                                alt={userName}
+                                className="object-cover"
+                            />
+                        ) : (
+                            <AvatarFallback className="bg-gray-900 text-gray-200">
+                                {userInitial}
+                            </AvatarFallback>
+                        )}
+                    </Avatar>
 
                     {!isCollapsed && (
                         <span className="ml-3 font-medium text-gray-700 truncate">
@@ -41,8 +48,8 @@ const UserProfileSection = ({
                 {showLogout && (
                     <div
                         className={`absolute ${isCollapsed ? 'left-full ml-2' : 'bottom-full mb-2'} bg-white shadow-lg rounded-lg py-2 px-4 min-w-[120px]`}
-                        onMouseEnter={() => setShowLogout(true)} // Prevent popup from disappearing
-                        onMouseLeave={() => setShowLogout(false)} // Hide popup when mouse leaves
+                        onMouseEnter={() => setShowLogout(true)}
+                        onMouseLeave={() => setShowLogout(false)}
                     >
                         <button
                             onClick={onLogout}

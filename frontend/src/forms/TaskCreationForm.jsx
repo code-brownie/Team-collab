@@ -4,7 +4,7 @@ import { useState } from 'react';
 const TaskCreationForm = ({ users, onSubmit, setModalOpen }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [priority, setPriority] = useState('Medium'); // Set default priority
+  const [priority, setPriority] = useState('Medium');
   const [deadline, setDeadline] = useState('');
   const [assignedTo, setAssignedTo] = useState('');
 
@@ -113,7 +113,7 @@ const TaskCreationForm = ({ users, onSubmit, setModalOpen }) => {
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          className="px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-700 transition-colors"
         >
           Create Task
         </button>

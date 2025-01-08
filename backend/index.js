@@ -1,6 +1,7 @@
-const express = require('express');
-const app = express();
 const cors = require('cors');
+const express = require('express');
+const http = require('http');
+const { configureSocket } = require('./config/socketconfig');
 const connectToDB = require('./controllers/database/dbconnect');
 const cookieParser = require('cookie-parser')
 const taskRoutes = require('./routes/TaskRoutes');
@@ -9,8 +10,17 @@ const teamRoutes = require('./routes/TeamRoutes');
 const projectRoutes = require('./routes/ProjectRoutes');
 const protectedRoute = require('./routes/Protected');
 const emailRoutes = require('./routes/EmailRoutes');
+const notificationRoutes = require('./routes/NotificationRoutes');
 const fileRoutes = require('./routes/FileRoutes');
 const fileUpload = require('express-fileupload');
+
+const app = express();
+const server = http.createServer(app);
+configureSocket(server);
+
+
+
+
 app.use(
     cors({
         origin: "http://localhost:5173",
@@ -41,7 +51,7 @@ app.use('/api/task', taskRoutes);
 app.use('/api/auth', protectedRoute);
 app.use('/api/email', emailRoutes);
 app.use('/api/files', fileRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 
-
-app.listen(3000, () => { console.log('sever listening on 3000') })
+server.listen(3000, () => { console.log('sever listening on 3000') })

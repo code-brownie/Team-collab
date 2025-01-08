@@ -1,8 +1,8 @@
+const notificationService = require('../../services/NotificationServices');
 const Project = require("../../models/Project");
 const Task = require("../../models/Task");
 const Team = require("../../models/Team");
 const TeamUser = require('../../models/TeamUser');
-
 // Create the Task
 const createTask = async (req, res) => {
     const { title, description, assignedId, projectId, deadline, status, priority } = req.body;
@@ -38,6 +38,19 @@ const createTask = async (req, res) => {
                 status, priority
             }
             const newTask = await Task.create(task_data);
+
+            await notificationService.createNotification(
+                assignedId,
+                'TASK_ASSIGNED',
+                `You have been assigned a new task: ${title}`,
+                {
+                    taskId: newTask.id,
+                    projectId: newTask.projectId,
+                    title: newTask.title
+                }
+            );
+
+
             return res.status(201).json({ Task: newTask, Message: 'Task Created' })
         }
 
@@ -72,7 +85,7 @@ const TaskByUser = async (req, res) => {
         const allTask = await Task.findAll({
             where: {
                 projectId: id,
-                assignedUserId: UserId
+                // assignedUserId: UserId
             }
         });
         if (!allTask) return res.status(404).send('No Task found');
@@ -109,7 +122,7 @@ const getTaskById = async (req, res) => {
             },
             include: {
                 model: Project,
-                attributes: ['teamId','name'],
+                attributes: ['teamId', 'name'],
                 include: {
                     model: Team,
                     attributes: ['name']
