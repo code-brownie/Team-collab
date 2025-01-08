@@ -14,12 +14,14 @@ import TeamsPage from "./Pages/Team";
 import FileSharing from "./Pages/File";
 import RegisterUser from "./components/RegisterToSocket";
 import NotificationList from "./components/NotificationList";
+import TeamChat from "./components/TeamChat";
+import { useState } from "react";
 
 function App() {
-
+  const [teamId, SetTeamId] = useState(null);
   return (
     <>
-      <RegisterUser />
+      <RegisterUser SetTeamId={SetTeamId} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signIn" element={<SignIn />} />
@@ -38,6 +40,7 @@ function App() {
           <Route path="/project/:id/kanban" element={<KanbanBoard />} />
           <Route path="/project/:id/file-sharing" element={<FileSharing />} />
           <Route path="/project/:id/notification" element={<NotificationList />} />
+          <Route path="/project/:id/chat" element={<TeamChat teamId={teamId} />} />
         </Route>
       </Routes>
     </>

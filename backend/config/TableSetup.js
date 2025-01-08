@@ -7,6 +7,7 @@ const User = require("../models/User");
 const UserProjects = require("../models/UserProjects");
 const File = require("../models/File");
 const Notification = require('../models/Notification');
+const Message = require('../models/Message');
 
 User.belongsToMany(Team, { through: TeamUser, foreignKey: 'UserId' });
 Team.belongsToMany(User, { through: TeamUser, foreignKey: 'TeamId' });
@@ -22,6 +23,11 @@ User.belongsToMany(Project, {
 Project.belongsToMany(User, {
     through: UserProjects, foreignKey: 'projectId', otherKey: 'userId'
 });
+Team.hasMany(Message, { foreignKey: 'teamId' });
+Message.belongsTo(Team, { foreignKey: 'teamId' });
+
+User.hasMany(Message, { foreignKey: 'senderId' });
+Message.belongsTo(User, { foreignKey: 'senderId' });
 
 User.hasMany(Notification, { foreignKey: 'userId' });
 Notification.belongsTo(User, { foreignKey: 'userId' });

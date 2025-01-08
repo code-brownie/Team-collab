@@ -105,4 +105,25 @@ export const links = [
             </svg>
         ),
     },
+    {
+        id: 6,
+        name: 'Chat',
+        path: 'project/:id/chat',
+        icon: (
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+            >
+                <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M8 16h8m-4-8h8m-8 8h4"
+                />
+            </svg>
+        ),
+    },
 ];

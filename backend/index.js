@@ -13,6 +13,7 @@ const emailRoutes = require('./routes/EmailRoutes');
 const notificationRoutes = require('./routes/NotificationRoutes');
 const fileRoutes = require('./routes/FileRoutes');
 const fileUpload = require('express-fileupload');
+const messageRoutes = require('./routes/MessageRoutes');
 
 const app = express();
 const server = http.createServer(app);
@@ -52,6 +53,7 @@ app.use('/api/auth', protectedRoute);
 app.use('/api/email', emailRoutes);
 app.use('/api/files', fileRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/messages', messageRoutes);
 
 
 server.listen(3000, () => { console.log('sever listening on 3000') })
