@@ -2,7 +2,6 @@ const Message = require("../../models/Message");
 const User = require("../../models/User");
 
 const getMessageForTeam = async (req, res) => {
-    const { teamId } = req.params;
     try {
         const messages = await Message.findAll({
             where: {
