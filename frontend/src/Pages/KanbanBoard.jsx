@@ -1,17 +1,21 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect, useState } from 'react';
-import Modal from '../components/Modal';
 import TaskCreationForm from '../forms/TaskCreationForm';
 import { useParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { ChevronDown, ChevronUp, Calendar, Plus } from 'lucide-react';
+import DialogWrapper from '@/components/DailogWrapper';
 
 const KanbanBoard = () => {
     const { toast } = useToast();
     const [loading, setLoading] = useState(true);
+    const [isCreateTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
     const { user } = useContext(AuthContext);
     const [users, setUsers] = useState([]);
     const { id } = useParams();
+    const [expandedColumn, setExpandedColumn] = useState(null);
     const [tasks, setTasks] = useState({
         'To Do': [],
         'In Progress': [],
@@ -91,7 +95,6 @@ const KanbanBoard = () => {
         }
     }, [id, user]);
 
-    const [isModalOpen, setModalOpen] = useState(false);
     const priorityConfig = {
         High: { color: 'bg-red-100 text-red-800', label: 'High' },
         Medium: { color: 'bg-yellow-100 text-yellow-800', label: 'Medium' },
@@ -201,7 +204,7 @@ const KanbanBoard = () => {
             });
             // Refresh tasks after creation
             getTask();
-            setModalOpen(false);
+            setCreateTaskDialogOpen(false);
         } catch (error) {
             toast({
                 title: "Error",
@@ -212,30 +215,78 @@ const KanbanBoard = () => {
         }
     };
 
+    const toggleColumn = (status) => {
+        setExpandedColumn(expandedColumn === status ? null : status);
+    };
+
     if (loading) {
         return <div className="p-6">Loading...</div>;
     }
 
     return (
         <>
-            
-            <div className="p-6 bg-white min-h-screen">
-                <div className="flex justify-between items-center mb-8">
-                    <h1 className="text-2xl font-bold text-black">Project Tasks</h1>
+            <div className="p-4 md:p-6 bg-white min-h-screen">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 md:mb-8">
+                    <h1 className="text-xl md:text-2xl font-bold text-black">Project Tasks</h1>
                     <button
-                        onClick={() => setModalOpen(true)}
-                        className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors flex items-center gap-2"
+                        onClick={() => setCreateTaskDialogOpen(true)}
+                        className="w-full sm:w-auto px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors flex items-center justify-center gap-2"
                     >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-                        </svg>
+                        <Plus className="w-4 h-4" />
                         Create Task
                     </button>
                 </div>
-                <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)} heading="Create Task">
-                    <TaskCreationForm users={users} onSubmit={handleTaskSubmit} setModalOpen={setModalOpen} />
-                </Modal>
-                <div className="grid grid-cols-4 gap-4">
+
+                <DialogWrapper
+                    isOpen={isCreateTaskDialogOpen}
+                    onOpenChange={setCreateTaskDialogOpen}
+                    title="Create Task"
+                // description="Enter the team join code to become a member of this team."
+                >
+                    <TaskCreationForm users={users} onSubmit={handleTaskSubmit} setCreateTaskDialogOpen={setCreateTaskDialogOpen} />
+                </DialogWrapper>
+
+                {/* Mobile View */}
+                <div className="md:hidden space-y-4">
+                    {Object.entries(tasks).map(([status, taskList]) => (
+                        <div key={status} className="bg-gray-50 rounded-lg p-4">
+                            <button
+                                onClick={() => toggleColumn(status)}
+                                className="w-full flex justify-between items-center text-left"
+                            >
+                                <div className="flex items-center gap-2">
+                                    <h2 className="text-lg font-semibold text-black capitalize">
+                                        {status}
+                                    </h2>
+                                    <span className="text-sm text-gray-500">({taskList.length})</span>
+                                </div>
+                                {expandedColumn === status ? (
+                                    <ChevronUp className="w-5 h-5 text-gray-500" />
+                                ) : (
+                                    <ChevronDown className="w-5 h-5 text-gray-500" />
+                                )}
+                            </button>
+
+                            {expandedColumn === status && (
+                                <div className="mt-4 space-y-3">
+                                    {taskList.map(task => (
+                                        <TaskCard
+                                            key={task.id}
+                                            task={task}
+                                            users={users}
+                                            priorityConfig={priorityConfig}
+                                            isDeadlineNear={isDeadlineNear}
+                                            formatDate={formatDate}
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
+
+                {/* Desktop View */}
+                <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {Object.entries(tasks).map(([status, taskList]) => (
                         <div
                             key={status}
@@ -250,38 +301,17 @@ const KanbanBoard = () => {
 
                             <div className="space-y-3">
                                 {taskList.map(task => (
-                                    <div
+                                    <TaskCard
                                         key={task.id}
+                                        task={task}
+                                        users={users}
+                                        priorityConfig={priorityConfig}
+                                        isDeadlineNear={isDeadlineNear}
+                                        formatDate={formatDate}
                                         draggable
                                         onDragStart={(e) => handleDragStart(e, task, status)}
-                                        className={`p-4 bg-white rounded-lg shadow-sm border border-gray-200 
-                                        cursor-move hover:shadow-md transition-shadow ${isDragging ? 'opacity-60' : ''}`}
-                                    >
-                                        <div className="flex justify-between items-start mb-2">
-                                            <h3 className="font-medium text-black">{task.title}</h3>
-                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${priorityConfig[task.priority]?.color || 'bg-gray-100 text-gray-800'}`}>
-                                                {task.priority || 'No Priority'}
-                                            </span>
-                                        </div>
-                                        <p className="text-sm text-gray-600 mb-3">{task.description}</p>
-                                        <div className="flex items-center justify-between text-sm">
-                                            <div className="flex items-center gap-2">
-                                                <span className="inline-block w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center">
-                                                    👤
-                                                </span>
-                                                <span className="text-gray-600">
-                                                    {users.find(u => u.id === task.assignedUserId)?.name || 'Unassigned'}
-                                                </span>
-                                            </div>
-                                            <div className={`flex items-center gap-1 ${isDeadlineNear(task.deadline) ? 'text-red-600' : 'text-gray-600'}`}>
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                </svg>
-                                                <span>{formatDate(task.deadline)}</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                        isDragging={isDragging}
+                                    />
                                 ))}
                             </div>
                         </div>
@@ -291,5 +321,39 @@ const KanbanBoard = () => {
         </>
     );
 };
+
+// Extracted TaskCard component for reusability
+const TaskCard = ({ task, users, priorityConfig, isDeadlineNear, formatDate, draggable, onDragStart, isDragging }) => (
+    <div
+        draggable={draggable}
+        onDragStart={onDragStart}
+        className={`p-3 md:p-4 bg-white rounded-lg shadow-sm border border-gray-200 
+            ${draggable ? 'cursor-move hover:shadow-md' : ''} 
+            transition-shadow ${isDragging ? 'opacity-60' : ''}`}
+    >
+        <div className="flex flex-col sm:flex-row sm:items-start gap-2 mb-2">
+            <h3 className="font-medium text-black flex-grow text-sm md:text-base">{task.title}</h3>
+            <span className={`px-2 py-1 rounded-full text-xs font-medium w-fit 
+                ${priorityConfig[task.priority]?.color || 'bg-gray-100 text-gray-800'}`}>
+                {task.priority || 'No Priority'}
+            </span>
+        </div>
+        <p className="text-xs md:text-sm text-gray-600 mb-3 line-clamp-2">{task.description}</p>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs md:text-sm">
+            <div className="flex items-center gap-2">
+                <span className="inline-block w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center">
+                    👤
+                </span>
+                <span className="text-gray-600 truncate max-w-[120px]">
+                    {users.find(u => u.id === task.assignedUserId)?.name || 'Unassigned'}
+                </span>
+            </div>
+            <div className={`flex items-center gap-1 ${isDeadlineNear(task.deadline) ? 'text-red-600' : 'text-gray-600'}`}>
+                <Calendar className="w-4 h-4" />
+                <span>{formatDate(task.deadline)}</span>
+            </div>
+        </div>
+    </div>
+);
 
 export default KanbanBoard;

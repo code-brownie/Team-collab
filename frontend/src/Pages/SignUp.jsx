@@ -146,7 +146,7 @@ const SignUp = () => {
           <div className="mt-8">
             <button
               type="submit"
-              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white text-lg font-semibold py-3 px-4 rounded"
+              className="w-full bg-gray-800 hover:bg-gray-600 text-white text-lg font-semibold py-3 px-4 rounded"
             >
               Sign up
             </button>
@@ -156,7 +156,7 @@ const SignUp = () => {
           <div className="mt-8 text-center">
             <p className="text-lg text-gray-700">
               Already have an account?{" "}
-              <Link to="/signIn" className="font-medium text-yellow-500 hover:underline">
+              <Link to="/signIn" className="font-medium text-gray-900 hover:underline">
                 Sign in
               </Link>
             </p>

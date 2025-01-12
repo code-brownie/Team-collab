@@ -2,6 +2,9 @@ const Project = require('../../models/Project');
 const User = require('../../models/User');
 const TeamUser = require('../../models/TeamUser');
 const Team = require('../../models/Team');
+const UserProjects = require('../../models/UserProjects');
+const Task = require('../../models/Task');
+
 const CreateProject = async (req, res) => {
     const { name, teamId, description, deadline } = req.body;
     console.log(deadline);
@@ -108,4 +111,44 @@ const AddUserToProject = async (req, res) => {
     }
 }
 
-module.exports = { CreateProject, GetProjectById, AddUserToProject };
+const GetAllProjects = async (req, res) => {
+    const { userId } = req.params;
+    console.log('userId', userId);
+
+    try {
+        if (!userId) {
+            return res.status(400).json({ message: 'Failed to load data: User ID is missing' });
+        }
+        const userWithProjects = await User.findByPk(userId, {
+            include: [
+                {
+                    model: Project,
+                    through: { attributes: [] },
+                    include: [
+                        {
+                            model: Team,
+                            attributes: ['id', 'name'], 
+                        },
+                        {
+                            model: Task,
+                            attributes: ['id','status'], 
+                        },
+                    ],
+                },
+            ],
+        });
+
+        if (!userWithProjects || !userWithProjects.Projects.length) {
+            return res.status(404).json({ message: 'No projects found for the user' });
+        }
+
+        return res.status(200).json({ projects: userWithProjects.Projects });
+    } catch (error) {
+        console.error('Error fetching projects:', error);
+        return res.status(500).json({ message: 'An error occurred while fetching projects' });
+    }
+};
+
+
+
+module.exports = { CreateProject, GetProjectById, AddUserToProject, GetAllProjects };

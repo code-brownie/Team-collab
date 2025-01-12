@@ -76,7 +76,7 @@ const SignIn = () => {
               id="email"
               value={formData.email}
               onChange={handleChange}
-              className="mt-2 block w-full rounded-md border-gray-500 text-lg p-3 shadow-sm focus:outline-none focus:border-indigo-500"
+              className="mt-2 block w-full rounded-md border-gray-800 text-lg p-3 shadow-sm focus:outline-none focus:border-indigo-800"
               placeholder="Enter your email"
               required
             />
@@ -91,7 +91,7 @@ const SignIn = () => {
               id="password"
               value={formData.password}
               onChange={handleChange}
-              className="mt-2 block w-full rounded-md border-gray-500 text-lg p-3 shadow-sm focus:outline-none focus:border-indigo-500"
+              className="mt-2 block w-full rounded-md border-gray-800 text-lg p-3 shadow-sm focus:outline-none focus:border-indigo-800"
               placeholder="Enter your password"
               required
             />
@@ -102,8 +102,8 @@ const SignIn = () => {
               type="submit"
               disabled={loading}
               className={`w-full text-white text-lg font-semibold py-3 px-4 rounded ${loading
-                ? "bg-gray-500 cursor-not-allowed"
-                : "bg-yellow-500 hover:bg-yellow-600"
+                ? "bg-gray-800 cursor-not-allowed"
+                : "bg-gray-800 hover:bg-gray-600"
                 }`}
             >
               {loading ? "Signing in..." : "Sign in"}
@@ -113,7 +113,7 @@ const SignIn = () => {
           <div className="mt-8 text-center">
             <p className="text-lg text-gray-700">
               Need an account?{" "}
-              <Link to="/signUp" className="font-medium text-yellow-500 hover:underline">
+              <Link to="/signUp" className="font-medium text-gray-800 hover:underline">
                 Sign up
               </Link>
             </p>

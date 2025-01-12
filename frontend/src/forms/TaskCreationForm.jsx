@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
 
-const TaskCreationForm = ({ users, onSubmit, setModalOpen }) => {
+const TaskCreationForm = ({ users, onSubmit, setCreateTaskDialogOpen }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('Medium');
@@ -56,7 +56,7 @@ const TaskCreationForm = ({ users, onSubmit, setModalOpen }) => {
         <select
           id="priority"
           value={priority}
-          onChange={(e) => {setPriority(e.target.value)}}
+          onChange={(e) => { setPriority(e.target.value) }}
           className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         >
           <option value="" disabled>Select Priority</option>
@@ -105,8 +105,9 @@ const TaskCreationForm = ({ users, onSubmit, setModalOpen }) => {
           type="button"
           onClick={() => {
             setTitle('');
-            setModalOpen(false);
+            setCreateTaskDialogOpen(false);
           }}
+
           className="px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400 transition-colors"
         >
           Cancel
@@ -118,7 +119,7 @@ const TaskCreationForm = ({ users, onSubmit, setModalOpen }) => {
           Create Task
         </button>
       </div>
-    </form>
+    </form >
   );
 };
 

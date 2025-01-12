@@ -132,12 +132,12 @@ const FileManagement = () => {
     };
 
     return (
-        <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-semibold text-gray-800">Team Files</h2>
+        <div className="bg-white rounded-lg shadow p-4 md:p-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                <h2 className="text-xl md:text-2xl font-semibold text-gray-800">Team Files</h2>
                 <button
                     onClick={() => setShowUploadModal(true)}
-                    className="flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition-colors"
                 >
                     <Plus className="w-5 h-5 mr-2" />
                     Upload File
@@ -145,7 +145,7 @@ const FileManagement = () => {
             </div>
 
             {error && (
-                <div className="mb-4 p-4 bg-red-50 text-red-700 rounded-lg">
+                <div className="mb-4 p-4 bg-red-50 text-red-700 rounded-lg text-sm md:text-base">
                     {error}
                 </div>
             )}
@@ -155,18 +155,18 @@ const FileManagement = () => {
                 onDelete={handleDelete}
                 formatFileSize={formatFileSize}
                 formatDate={formatDate}
-                users={project.Team.Users}
+                users={project.Team?.Users}
                 currentUser={userId.id}
             />}
 
             {showUploadModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                    <div className="bg-white p-6 rounded-lg w-96">
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white p-4 md:p-6 rounded-lg w-full max-w-md mx-4">
                         <h3 className="text-lg font-semibold mb-4">Upload File</h3>
                         <input
                             type="file"
                             onChange={(e) => setSelectedFile(e.target.files[0])}
-                            className="w-full p-2 border rounded"
+                            className="w-full p-2 border rounded text-sm md:text-base"
                         />
                         <div className="flex justify-end mt-4 space-x-2">
                             <button
@@ -174,13 +174,13 @@ const FileManagement = () => {
                                     setShowUploadModal(false);
                                     setSelectedFile(null);
                                 }}
-                                className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
+                                className="px-3 md:px-4 py-2 text-sm md:text-base text-gray-600 hover:bg-gray-100 rounded"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={handleFileUpload}
-                                className="px-4 py-2 bg-gray-900 text-white rounded hover:bg-gray-700"
+                                className="px-3 md:px-4 py-2 text-sm md:text-base bg-gray-900 text-white rounded hover:bg-gray-700"
                                 disabled={loading || !selectedFile}
                             >
                                 {loading ? 'Uploading...' : 'Upload'}

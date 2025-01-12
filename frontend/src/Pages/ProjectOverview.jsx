@@ -1,12 +1,15 @@
-/* eslint-disable no-unused-vars */
 import { useContext, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Doughnut } from "react-chartjs-2";
 import { AuthContext } from "../context/AuthContext";
 import { toast } from "@/hooks/use-toast";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { CalendarDays, Users, CheckCircle, ArrowLeft } from "lucide-react";
+import ProgressChart from "@/components/ChartSection";
+
 
 const ProjectOverview = () => {
-    const { user } = useContext(AuthContext);
+    const { userId } = useContext(AuthContext);
     const [Project, setProject] = useState(null);
     const [loading, setLoading] = useState(true);
     const [members, setMembers] = useState([]);
@@ -56,7 +59,7 @@ const ProjectOverview = () => {
 
     const getTask = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/api/task/taskforUser?id=${id}&UserId=${user.id}`, {
+            const response = await fetch(`http://localhost:3000/api/task/taskforUser?id=${id}&UserId=${userId.id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -103,136 +106,160 @@ const ProjectOverview = () => {
         return `${day}-${month}-${year}`;
     }
     useEffect(() => {
-        if (id && user) {
+        if (id && userId) {
             setProjectId(id);
             getProject();
             getTask();
         }
-    }, [id, user]);
+    }, [id, userId]);
+
 
     if (loading) {
-        return <div>Loading...</div>;
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+            </div>
+        );
     }
 
     if (!Project) {
-        return <div>Project data not found.</div>;
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <p className="text-lg text-gray-600">Project data not found.</p>
+            </div>
+        );
     }
-    const chartData = {
-        labels: ["Completed", "Pending"],
-        datasets: [
-            {
-                data: [tasksCompleted, totalTasks - tasksCompleted],
-                backgroundColor: ["#6366F1", "#A5B4FC"],
-                borderWidth: 0,
-            },
-        ],
-    };
 
-    const chartOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                display: true,
-                position: 'bottom',
-                labels: {
-                    padding: 20,
-                    boxWidth: 12,
-                    usePointStyle: true,
-                    pointStyle: 'circle',
-                    font: {
-                        size: 14
-                    }
-                }
-            },
-            tooltip: {
-                callbacks: {
-                    label: (context) => {
-                        const value = context.raw;
-                        const total = tasksCompleted + (totalTasks - tasksCompleted);
-                        const percentage = ((value / total) * 100).toFixed(0);
-                        return `${context.label}: ${value} (${percentage}%)`;
-                    },
-                },
-            },
-        },
-        cutout: "70%",
-    };
+    const progress = totalTasks > 0 ? (tasksCompleted / totalTasks) * 100 : 0;
 
     return (
-        <div className="p-6 flex flex-col space-y-6">
-            {/* Header Section */}
-            <div className="bg-white shadow rounded-lg p-6 flex flex-col md:flex-row justify-between items-center">
-                <div>
-                    <h1 className="text-3xl font-bold text-gray-800">{Project?.name}</h1>
-                    <p className="text-gray-600 mt-2">{Project?.description}</p>
-                    <div className="mt-4 flex flex-wrap gap-4 text-sm text-gray-500">
-                        <div>
-                            <span className="font-semibold">Deadline:</span> {formatDateToDDMMYYYY(Project?.deadline)}
+        <div className="min-h-screen bg-gray-50 p-4 lg:p-6">
+            <div className="max-w-7xl mx-auto space-y-6">
+                {/* Header Section */}
+                <Card>
+                    <CardContent className="pt-6">
+                        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                            <div className="space-y-2">
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => navigate("/dashboard")}
+                                        className="text-gray-600 hover:text-gray-900"
+                                    >
+                                        <ArrowLeft className="h-5 w-5" />
+                                    </button>
+                                    <h1 className="text-2xl lg:text-3xl font-bold">{Project?.name}</h1>
+                                </div>
+                                <p className="text-gray-600">{Project?.description}</p>
+                                <div className="flex flex-wrap gap-4 text-sm">
+                                    <div className="flex items-center gap-2">
+                                        <CalendarDays className="h-4 w-4 text-gray-500" />
+                                        <span>Created: {formatDateToDDMMYYYY(Project?.createdAt)}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <CheckCircle className="h-4 w-4 text-gray-500" />
+                                        <span>Deadline: {formatDateToDDMMYYYY(Project?.deadline)}</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <span className="font-semibold">Created:</span> {formatDateToDDMMYYYY(Project?.createdAt)}
+                    </CardContent>
+                </Card>
+
+                {/* Overview Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {/* Progress Overview */}
+                    {/* <Card>
+                        <CardHeader>
+                            <CardTitle>Progress Overview</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="h-[200px]">
+                                <Doughnut data={chartData} options={chartOptions} />
+                            </div>
+                            <div className="mt-4 text-center">
+                                <div className="text-2xl font-bold">{progress.toFixed(0)}%</div>
+                                <div className="text-sm text-gray-500">Overall Progress</div>
+                            </div>
+                        </CardContent>
+                    </Card> */}
+                    {/* In your ProjectOverview component */}
+                    <ProgressChart tasksCompleted={tasksCompleted} totalTasks={totalTasks} />
+                    {/* Tasks Overview */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Tasks Overview</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-4">
+                                <div>
+                                    <div className="flex justify-between mb-2 text-sm">
+                                        <span>Progress</span>
+                                        <span>{progress.toFixed(0)}%</span>
+                                    </div>
+                                    <Progress value={progress} className="h-2" />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="bg-gray-50 p-4 rounded-lg">
+                                        <div className="text-2xl font-bold">{totalTasks}</div>
+                                        <div className="text-sm text-gray-500">Total Tasks</div>
+                                    </div>
+                                    <div className="bg-gray-50 p-4 rounded-lg">
+                                        <div className="text-2xl font-bold">{tasksCompleted}</div>
+                                        <div className="text-sm text-gray-500">Completed</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Team Members */}
+                    <Card className="lg:row-span-2">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-lg font-bold">Team Members</CardTitle>
+                            <Users className="h-4 w-4 text-gray-500" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-4">
+                                {members?.Users?.map((user) => (
+                                    <div
+                                        key={user.id}
+                                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
+                                                {user.name.charAt(0)}
+                                            </div>
+                                            <div>
+                                                <div className="font-medium">{user.name}</div>
+                                                <div className="text-sm text-gray-500">{user.TeamUser.role}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* Task Breakdown */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Task Status Breakdown</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            {Object.entries(task).map(([status, tasks]) => (
+                                <div key={status} className="bg-gray-50 p-4 rounded-lg">
+                                    <div className="text-sm text-gray-500">{status}</div>
+                                    <div className="text-2xl font-bold mt-1">{tasks.length}</div>
+                                    <div className="text-sm text-gray-500 mt-1">
+                                        {((tasks.length / totalTasks) * 100).toFixed(0)}% of total
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                        <div>
-                            <span className="font-semibold">Progress:</span>{" "}
-                            {tasksCompleted != 0 ? ((tasksCompleted / totalTasks) * 100).toFixed(0) : '0'}%
-                        </div>
-                    </div>
-                </div>
-
-                <button
-                    onClick={() => navigate("/dashboard")}
-                    className="mt-4 md:mt-0 bg-gray-900 text-white px-6 py-2 rounded-lg shadow hover:bg-gray-700 transition"
-                >
-                    Back to Dashboard
-                </button>
-            </div>
-
-            {/* Team Members and Progress Section */}
-            <div className="flex flex-col md:flex-row gap-6">
-                <div className="bg-white shadow rounded-lg p-6 w-full md:w-1/3">
-                    <div className="h-64 relative">
-                        <Doughnut data={chartData} options={chartOptions} />
-                    </div>
-                    <div className="mt-4 text-center text-gray-700 font-semibold">
-                        Total Tasks: {totalTasks}
-                    </div>
-                </div>
-
-                <div className="bg-white shadow rounded-lg p-6 w-full md:w-2/3">
-                    <h2 className="text-xl font-bold text-gray-800">Team Members</h2>
-                    <ul className="mt-4 space-y-2">
-                        {members?.Users?.map((user) => (
-                            <li
-                                key={user.id}
-                                className="flex justify-between items-center border p-4 rounded-lg hover:bg-gray-50 transition"
-                            >
-                                <span className="font-semibold">{user.name}</span>
-                                <span className="text-gray-500 text-sm">{user.TeamUser.role}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </div>
-
-            {/* Tasks Summary Section */}
-            <div className="bg-white shadow rounded-lg p-6">
-                <h2 className="text-xl font-bold text-gray-800">Tasks Progress</h2>
-                <div className="mt-4">
-                    <p className="text-gray-600">
-                        <span className="font-semibold">{tasksCompleted}</span> of{" "}
-                        <span className="font-semibold">{totalTasks}</span> tasks
-                        completed
-                    </p>
-                    <div className="bg-gray-200 rounded-full h-4 w-full mt-2 overflow-hidden">
-                        <div
-                            className="bg-green-500 h-full rounded-full transition-all duration-300"
-                            style={{
-                                width: `${totalTasks > 0 ? (tasksCompleted / totalTasks) * 100 : 0}%`,
-                            }}
-                        />
-                    </div>
-                </div>
+                    </CardContent>
+                </Card>
             </div>
         </div>
     );

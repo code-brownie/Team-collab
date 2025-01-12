@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 
-const MangeMembers = ({ members, handleSubmit, setModalOpen }) => {
+const MangeMembers = ({ members, handleSubmit, onClose }) => {
     const [localMembers, setLocalMembers] = useState(members);
 
     const removeMember = (member) => {
@@ -38,14 +38,14 @@ const MangeMembers = ({ members, handleSubmit, setModalOpen }) => {
             <div className="flex justify-end gap-4 pt-4">
                 <button
                     type="button"
-                    onClick={() => setModalOpen(false)}
+                    onClick={onClose}
                     className="px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400 transition-colors"
                 >
                     Cancel
                 </button>
                 <button
                     onClick={saveChanges}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                    className="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-600 transition-colors"
                 >
                     Save
                 </button>
