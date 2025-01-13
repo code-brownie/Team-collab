@@ -20,12 +20,13 @@ const app = express();
 const server = http.createServer(app);
 configureSocket(server);
 
-
-
-
+const Mode = process.env.NODE_ENV;
+const URL = process.env.NODE_ENV === 'production'
+    ? process.env.API_BASE_URL_PROD
+    : process.env.API_BASE_URL_DEV;
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: URL,
         credentials: true,
     })
 );
@@ -56,5 +57,5 @@ app.use('/api/files', fileRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/messages', messageRoutes);
 
-
-server.listen(PORT, () => { console.log(`sever listening on ${PORT}`) })
+console.log('url', URL);
+server.listen(PORT, () => { console.log(`sever listening on ${PORT} in ${Mode}`) })
