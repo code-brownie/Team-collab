@@ -10,11 +10,14 @@ const Project = () => {
     const [loading, setLoading] = useState(true);
     const { userId } = useContext(AuthContext);
     const { toast } = useToast();
-
+    const URL =
+        import.meta.env.VITE_NODE_ENV === 'production'
+            ? import.meta.env.VITE_API_BASE_URL_PROD
+            : import.meta.env.VITE_API_BASE_URL_DEV;
     const getProjects = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`http://localhost:3000/api/users/getProjects?userId=${userId.id}`);
+            const response = await fetch(`${URL}/users/getProjects?userId=${userId.id}`);
             const data = await response.json();
             if (!response.ok) {
                 throw new Error('Failed to fetch the projects');
@@ -34,6 +37,7 @@ const Project = () => {
     }
 
     useEffect(() => {
+        console.log(URL);
         if (userId) {
             getProjects();
         }

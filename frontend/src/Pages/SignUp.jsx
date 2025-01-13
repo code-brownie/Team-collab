@@ -12,6 +12,8 @@ const SignUp = () => {
     password: "",
     confirmPassword: "",
   });
+  const URL = import.meta.env.VITE_API_BASE_URL_PROD || import.meta.env.DEV;
+
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const handleChange = (e) => {
@@ -30,7 +32,7 @@ const SignUp = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/api/users/signup", {
+      const response = await fetch(`${URL}/users/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,7 +57,7 @@ const SignUp = () => {
       } else {
         toast({
           title: "SignUp Failed",
-          description: data.message ||"Try again",
+          description: data.message || "Try again",
           variant: "destructive",
         });
       }

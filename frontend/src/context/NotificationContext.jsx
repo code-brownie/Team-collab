@@ -14,13 +14,15 @@ export const NotificationProvider = ({ children }) => {
     const { socket, isConnected } = useSocket();
     const { userId } = useContext(AuthContext);
     const { toast } = useToast();
-
-    useEffect(() => {
+const URL =
+    import.meta.env.VITE_NODE_ENV === 'production'
+        ? import.meta.env.VITE_API_BASE_URL_PROD 
+        : import.meta.env.VITE_API_BASE_URL_DEV;    useEffect(() => {
         if (!isConnected || !userId) return;
 
         const fetchNotifications = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/api/notifications/unread/${userId.id}`);
+                const response = await fetch(`${URL}/notifications/unread/${userId.id}`);
                 const data = await response.json();
                 setNotifications(data.notifications);
                 setUnreadCount(data.notifications.length);
@@ -48,7 +50,7 @@ export const NotificationProvider = ({ children }) => {
     const markAsRead = async (notificationId) => {
         console.log('notificationId', notificationId);
         try {
-            const response = await fetch(`http://localhost:3000/api/notifications/${notificationId}/read`, {
+            const response = await fetch(`${URL}/notifications/${notificationId}/read`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -82,7 +84,7 @@ export const NotificationProvider = ({ children }) => {
 
     const deleteNotification = async (notificationId) => {
         try {
-            const response = await fetch(`http://localhost:3000/api/notifications/${notificationId}`, {
+            const response = await fetch(`${URL}/notifications/${notificationId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
@@ -111,7 +113,7 @@ export const NotificationProvider = ({ children }) => {
 
     const markAllAsRead = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/api/notifications/read-all/${userId.id}`, {
+            const response = await fetch(`${URL}/notifications/read-all/${userId.id}`, {
                 method: 'PUT',
             });
 

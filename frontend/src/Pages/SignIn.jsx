@@ -4,6 +4,8 @@ import { AuthContext } from "../context/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
 const SignIn = () => {
+  const URL = import.meta.env.VITE_API_BASE_URL_PROD || import.meta.env.DEV;
+
   const { toast } = useToast();
   const { login } = useContext(AuthContext);
   const [formData, setFormData] = useState({
@@ -24,7 +26,7 @@ const SignIn = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/api/users/signin", {
+      const response = await fetch(`${URL}/users/signin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

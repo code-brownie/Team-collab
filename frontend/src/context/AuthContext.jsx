@@ -13,10 +13,12 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [projectId, setProjectId] = useState(() => localStorage.getItem("projectId") || null);
     const navigate = useNavigate();
-
-    const fetchUserDetails = async (id) => {
+const URL =
+    import.meta.env.VITE_NODE_ENV === 'production'
+        ? import.meta.env.VITE_API_BASE_URL_PROD 
+        : import.meta.env.VITE_API_BASE_URL_DEV;    const fetchUserDetails = async (id) => {
         try {
-            const response = await fetch(`http://localhost:3000/api/users/GetUserById?id=${id}`, {
+            const response = await fetch(`${URL}/users/GetUserById?id=${id}`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -45,7 +47,7 @@ export const AuthProvider = ({ children }) => {
         const validateToken = async () => {
             if (token) {
                 try {
-                    const response = await fetch("http://localhost:3000/api/auth/protected", {
+                    const response = await fetch(`${URL}/auth/protected`, {
                         method: "GET",
                         headers: {
                             Authorization: `Bearer ${token}`,

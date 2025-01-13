@@ -3,13 +3,15 @@ import { AuthContext } from "../context/AuthContext";
 import TaskCard from "../components/TaskCard";
 
 const Task = () => {
+  const URL = import.meta.env.VITE_API_BASE_URL_PROD || import.meta.env.DEV;
+
   const { userId, user } = useContext(AuthContext);
   const [tasks, setTasks] = useState([]);
 
   const getAllTask = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/task/GetTaskById?id=${userId.id}`,
+        `${URL}/task/GetTaskById?id=${userId.id}`,
         {
           method: "GET",
           headers: {

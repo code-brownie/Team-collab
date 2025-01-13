@@ -19,9 +19,12 @@ const ProjectOverview = () => {
     const navigate = useNavigate();
     const { setProjectId } = useContext(AuthContext);
     const { id } = useParams();
-    const getProject = async () => {
+const URL =
+    import.meta.env.VITE_NODE_ENV === 'production'
+        ? import.meta.env.VITE_API_BASE_URL_PROD 
+        : import.meta.env.VITE_API_BASE_URL_DEV;    const getProject = async () => {
         try {
-            const response_project = await fetch(`http://localhost:3000/api/project/getOne?projectId=${id}`, {
+            const response_project = await fetch(`${URL}/project/getOne?projectId=${id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -35,7 +38,7 @@ const ProjectOverview = () => {
             setProject(data_project.project);
 
             const teamId = data_project.project.teamId;
-            const response_members = await fetch(`http://localhost:3000/api/team/getAll?teamId=${teamId}`, {
+            const response_members = await fetch(`${URL}/team/getAll?teamId=${teamId}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -59,7 +62,7 @@ const ProjectOverview = () => {
 
     const getTask = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/api/task/taskforUser?id=${id}&UserId=${userId.id}`, {
+            const response = await fetch(`${URL}/task/taskforUser?id=${id}&UserId=${userId.id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"

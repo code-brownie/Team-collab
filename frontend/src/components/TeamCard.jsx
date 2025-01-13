@@ -15,10 +15,12 @@ const TeamCard = ({ team, currentUserId, updateTeamMembers }) => {
     const [teamMembers, setTeamMembers] = useState(team.Users);
     const currentUser = team.Users.find((user) => user.id === currentUserId);
     const currentRole = currentUser?.TeamUser?.role || "Member";
-
-    const handleSubmit = async (updatedMembers) => {
+const URL =
+    import.meta.env.VITE_NODE_ENV === 'production'
+        ? import.meta.env.VITE_API_BASE_URL_PROD 
+        : import.meta.env.VITE_API_BASE_URL_DEV;    const handleSubmit = async (updatedMembers) => {
         try {
-            const response = await fetch(`http://localhost:3000/api/team/updateTeam`, {
+            const response = await fetch(`${URL}/team/updateTeam`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

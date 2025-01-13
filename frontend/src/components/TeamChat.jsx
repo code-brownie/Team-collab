@@ -17,14 +17,16 @@ const TeamChat = ({ teamId }) => {
     const [typingTimeout, setTypingTimeout] = useState(null);
     const messagesEndRef = useRef(null);
     const chatContentRef = useRef(null);
-
-    const scrollToBottom = () => {
+const URL =
+    import.meta.env.VITE_NODE_ENV === 'production'
+        ? import.meta.env.VITE_API_BASE_URL_PROD 
+        : import.meta.env.VITE_API_BASE_URL_DEV;    const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
     const getUser = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/api/users/getUserById?id=${userId.id}`, {
+            const response = await fetch(`${URL}/users/getUserById?id=${userId.id}`, {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json"
@@ -48,7 +50,7 @@ const TeamChat = ({ teamId }) => {
     useEffect(() => {
         const loadMessages = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/api/messages/team/${teamId}`);
+                const response = await fetch(`${URL}/messages/team/${teamId}`);
                 const data = await response.json();
                 setMessages(data.messages);
             } catch (error) {
@@ -242,8 +244,8 @@ const TeamChat = ({ teamId }) => {
                             >
                                 <div
                                     className={`max-w-[85%] md:max-w-[70%] rounded-lg p-3 ${msg.senderId === userId.id
-                                            ? 'bg-gray-800 text-white'
-                                            : 'bg-gray-100'
+                                        ? 'bg-gray-800 text-white'
+                                        : 'bg-gray-100'
                                         }`}
                                 >
                                     <div className="text-sm font-medium mb-1">
@@ -251,8 +253,8 @@ const TeamChat = ({ teamId }) => {
                                     </div>
                                     <div className="break-words">{msg.content}</div>
                                     <div className={`text-xs ${msg.senderId === userId.id
-                                            ? 'text-blue-100'
-                                            : 'text-gray-500'
+                                        ? 'text-blue-100'
+                                        : 'text-gray-500'
                                         } mt-1`}>
                                         {formatMessageDate(msg.timestamp)}
                                     </div>

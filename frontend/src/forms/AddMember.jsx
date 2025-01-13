@@ -8,8 +8,10 @@ const AddMember = ({ onClose, joinCode }) => {
     const [loading, setLoading] = useState(false);
     const { userId } = useContext(AuthContext);
     const [email, setEmail] = useState("");
-
-
+const URL =
+    import.meta.env.VITE_NODE_ENV === 'production'
+        ? import.meta.env.VITE_API_BASE_URL_PROD 
+        : import.meta.env.VITE_API_BASE_URL_DEV;
     // Function to send invitation email
     const sendInvitation = async () => {
         if (!email) {
@@ -29,7 +31,7 @@ const AddMember = ({ onClose, joinCode }) => {
 
         try {
             // Send the invitation email using your backend API
-            const response = await fetch('http://localhost:3000/api/email/send-invitation', {
+            const response = await fetch(`${URL}/email/send-invitation`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

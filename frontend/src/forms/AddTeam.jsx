@@ -12,11 +12,13 @@ const AddMembersForm = ({ members, setMembers, backStep, handleSubmit }) => {
     const [allUsers, setAllUsers] = useState([]);
     const [searching, setSearching] = useState(false);
     const [submitting, setSubmitting] = useState(false);
-
-    useEffect(() => {
+const URL =
+    import.meta.env.VITE_NODE_ENV === 'production'
+        ? import.meta.env.VITE_API_BASE_URL_PROD 
+        : import.meta.env.VITE_API_BASE_URL_DEV;    useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await fetch("http://localhost:3000/api/users/all");
+                const response = await fetch(`${URL}/users/all`);
                 const data = await response.json();
                 const filteredUsers = data.users.filter((user) => user.id !== UserId);
                 setAllUsers(filteredUsers);

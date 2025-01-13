@@ -9,7 +9,10 @@ import { ChevronDown, ChevronUp, Calendar, Plus } from 'lucide-react';
 import DialogWrapper from '@/components/DailogWrapper';
 
 const KanbanBoard = () => {
-    const { toast } = useToast();
+const URL =
+    import.meta.env.VITE_NODE_ENV === 'production'
+        ? import.meta.env.VITE_API_BASE_URL_PROD 
+        : import.meta.env.VITE_API_BASE_URL_DEV;    const { toast } = useToast();
     const [loading, setLoading] = useState(true);
     const [isCreateTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
     const { user } = useContext(AuthContext);
@@ -26,7 +29,7 @@ const KanbanBoard = () => {
     // Fetch the project with the team users
     const getProject = async () => {
         try {
-            const response_project = await fetch(`http://localhost:3000/api/project/getOne?projectId=${id}`, {
+            const response_project = await fetch(`${URL}/project/getOne?projectId=${id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -52,7 +55,7 @@ const KanbanBoard = () => {
 
     const getTask = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/api/task/taskforUser?id=${id}&UserId=${user.id}`, {
+            const response = await fetch(`${URL}/task/taskforUser?id=${id}&UserId=${user.id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -129,7 +132,7 @@ const KanbanBoard = () => {
 
         // TODO: Add API call to update task status in backend
         try {
-            const response = await fetch('http://localhost:3000/api/task/updateTask', {
+            const response = await fetch(`${URL}/task/updateTask`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -182,7 +185,7 @@ const KanbanBoard = () => {
 
     const handleTaskSubmit = async (newTask) => {
         try {
-            const response = await fetch('http://localhost:3000/api/task/createTask', {
+            const response = await fetch(`${URL}/task/createTask`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

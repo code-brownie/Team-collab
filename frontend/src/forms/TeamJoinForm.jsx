@@ -6,9 +6,12 @@ const JoinTeamForm = ({ onClose, onJoinSuccess }) => {
     const [joinCode, setJoinCode] = useState("");
     const [error, setError] = useState("");
     const { userId } = useContext(AuthContext);
-    const handleJoin = async () => {
+const URL =
+    import.meta.env.VITE_NODE_ENV === 'production'
+        ? import.meta.env.VITE_API_BASE_URL_PROD 
+        : import.meta.env.VITE_API_BASE_URL_DEV;    const handleJoin = async () => {
         try {
-            const response = await fetch("http://localhost:3000/api/team/joinTeam", {
+            const response = await fetch(`${URL}/team/joinTeam`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ joinCode, userId: userId.id }),

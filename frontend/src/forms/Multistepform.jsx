@@ -9,7 +9,10 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 
 const MultiStepForm = () => {
-    const { userId, setProjectId } = useContext(AuthContext);
+const URL =
+    import.meta.env.VITE_NODE_ENV === 'production'
+        ? import.meta.env.VITE_API_BASE_URL_PROD 
+        : import.meta.env.VITE_API_BASE_URL_DEV;    const { userId, setProjectId } = useContext(AuthContext);
     const UserId = userId.id;
     const [currentStep, setCurrentStep] = useState(1);
     const [teamData, setTeamData] = useState({ teamName: "", description: "" });
@@ -37,7 +40,7 @@ const MultiStepForm = () => {
         }
         // create the Team
         try {
-            const team_response = await fetch('http://localhost:3000/api/team/createTeam', {
+            const team_response = await fetch(`${URL}/team/createTeam`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -52,7 +55,7 @@ const MultiStepForm = () => {
             const teamId = createdTeam.Team.id;
 
             // Adding the members to the Team
-            await fetch(`http://localhost:3000/api/team/${teamId}/users`, {
+            await fetch(`${URL}/team/${teamId}/users`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -63,7 +66,7 @@ const MultiStepForm = () => {
             });
 
             // Create the Project using the team Id
-            const project_response = await fetch('http://localhost:3000/api/project/create', {
+            const project_response = await fetch(`${URL}/project/create`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -82,7 +85,7 @@ const MultiStepForm = () => {
                 setProjectId(projectId);
 
                 // Add the users to the Project
-                await fetch("http://localhost:3000/api/project/addUsertoProject", {
+                await fetch(`${URL}/project/addUsertoProject`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"

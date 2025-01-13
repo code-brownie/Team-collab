@@ -16,7 +16,10 @@ const FileManagement = () => {
     const [teamId, setTeamId] = useState(null);
     const { id } = useParams();
     const { userId } = useContext(AuthContext);
-    useEffect(() => {
+const URL =
+    import.meta.env.VITE_NODE_ENV === 'production'
+        ? import.meta.env.VITE_API_BASE_URL_PROD 
+        : import.meta.env.VITE_API_BASE_URL_DEV;    useEffect(() => {
         if (userId && id) {
             // console.log(userId.id);
             fetchProject();
@@ -29,7 +32,7 @@ const FileManagement = () => {
 
     const fetchFiles = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/api/files/getFile/team/${teamId}`);
+            const response = await fetch(`${URL}/files/getFile/team/${teamId}`);
             if (!response.ok) throw new Error('Failed to fetch files');
             const data = await response.json();
             console.log('data', data);
@@ -42,7 +45,7 @@ const FileManagement = () => {
 
     const fetchProject = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/api/project/getOne?projectId=${id}`, {
+            const response = await fetch(`${URL}/project/getOne?projectId=${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -78,7 +81,7 @@ const FileManagement = () => {
             formData.append('teamId', teamId);
             formData.append('userId', userId.id);
 
-            const response = await fetch('http://localhost:3000/api/files/upload', {
+            const response = await fetch(`${URL}/files/upload`, {
                 method: 'POST',
                 body: formData,
             });
@@ -103,7 +106,7 @@ const FileManagement = () => {
 
     const handleDelete = async (fileId) => {
         try {
-            const response = await fetch(`http://localhost:3000/api/files/delete/${fileId}`, {
+            const response = await fetch(`${URL}/files/delete/${fileId}`, {
                 method: 'DELETE',
             });
 

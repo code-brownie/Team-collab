@@ -4,17 +4,20 @@ import { useSocket } from "@/context/SocketContext";
 
 import { useContext, useEffect, useCallback, useState } from "react";
 
-const RegisterUser = ({SetTeamId}) => {
+const RegisterUser = ({ SetTeamId }) => {
     const { userId } = useContext(AuthContext);
     const { socket, isConnected } = useSocket();
     const { projectId } = useContext(AuthContext);
     const [teamId, setTeamId] = useState(null);
     const [teamMemberIds, setTeamMemberIds] = useState([]);
-
+    const URL =
+        import.meta.env.VITE_NODE_ENV === 'production'
+            ? import.meta.env.VITE_API_BASE_URL_PROD
+            : import.meta.env.VITE_API_BASE_URL_DEV;
     const getTeamMembers = async () => {
         try {
             const response_project = await fetch(
-                `http://localhost:3000/api/project/getOne?projectId=${projectId}`,
+                `${URL}/project/getOne?projectId=${projectId}`,
                 { method: "GET", headers: { "Content-Type": "application/json" } }
             );
 
@@ -26,7 +29,7 @@ const RegisterUser = ({SetTeamId}) => {
             const fetchedTeamId = data_project.project.teamId;
 
             const response_members = await fetch(
-                `http://localhost:3000/api/team/getAll?teamId=${fetchedTeamId}`,
+                `${URL}/team/getAll?teamId=${fetchedTeamId}`,
                 { method: "GET", headers: { "Content-Type": "application/json" } }
             );
 

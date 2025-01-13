@@ -29,10 +29,14 @@ const Dashboard = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const { userId } = useContext(AuthContext);
+  const URL =
+    import.meta.env.VITE_NODE_ENV === 'production'
+      ? import.meta.env.VITE_API_BASE_URL_PROD
+      : import.meta.env.VITE_API_BASE_URL_DEV;
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/project/getMany/${userId.id}`, {
+      const response = await fetch(`${URL}/project/getMany/${userId.id}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
