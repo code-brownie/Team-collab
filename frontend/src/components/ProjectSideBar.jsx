@@ -6,7 +6,7 @@ import CloseButton from "./CloseButton";
 import { AuthContext } from "../context/AuthContext";
 import { NotificationContext } from "../context/NotificationContext";
 import { Badge } from "@/components/ui/badge";
-import logo from "../assets/logo.png";
+import logo from "../../public/logo.png";
 import UserProfileSection from "./UserProfile";
 
 const ProjectSideBar = ({ isCollapsed, toggleSidebar }) => {

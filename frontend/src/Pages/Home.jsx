@@ -10,7 +10,7 @@ const Home = () => {
                 <div className="flex items-center">
                   
                     <img
-                        src="src/assets/logo.png"
+                        src="/public/logo.png"
                         alt="Logo"
                         className="w-8 h-8 mr-2" 
                     />
@@ -54,7 +54,7 @@ const Home = () => {
                 <img
                     height={500}
                     width={1000}
-                    src="src/assets/landing1.png"
+                    src="public/landing1.png"
                     alt="Project Calendar"
                     className="w-full scale-68 transition duration-700 ease-in-out"
                 />

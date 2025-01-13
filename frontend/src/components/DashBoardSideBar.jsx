@@ -4,7 +4,7 @@ import { links } from '../data/DashBoardLinks';
 import CloseButton from './CloseButton';
 import UserProfileSection from './UserProfile';
 import { AuthContext } from '../context/AuthContext';
-
+import logo from '../../public/logo.png'
 
 const DashboardSideBar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -34,7 +34,7 @@ const DashboardSideBar = () => {
                 {!isCollapsed && (
                     <div className="flex items-center">
                         <img
-                            src="src/assets/logo.png"
+                            src={logo}
                             alt="Logo"
                             className="w-6 h-6 mr-2"
                         />
