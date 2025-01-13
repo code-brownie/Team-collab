@@ -24,9 +24,22 @@ const Mode = process.env.NODE_ENV;
 const URL = process.env.NODE_ENV === 'production'
     ? process.env.API_BASE_URL_PROD
     : process.env.API_BASE_URL_DEV;
+const allowedOrigins = [
+    'http://localhost:3000',
+    'https://brownie-team-collab.vercel.app',
+    'https://team-collab.onrender.com'
+];
+
+// Configure CORS middleware
 app.use(
     cors({
-        origin: URL,
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
         credentials: true,
     })
 );
