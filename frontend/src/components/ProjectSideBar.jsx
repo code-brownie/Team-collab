@@ -6,7 +6,6 @@ import CloseButton from "./CloseButton";
 import { AuthContext } from "../context/AuthContext";
 import { NotificationContext } from "../context/NotificationContext";
 import { Badge } from "@/components/ui/badge";
-import logo from "../../public/logo.png";
 import UserProfileSection from "./UserProfile";
 
 const ProjectSideBar = ({ isCollapsed, toggleSidebar }) => {
@@ -35,7 +34,7 @@ const ProjectSideBar = ({ isCollapsed, toggleSidebar }) => {
             <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200">
                 {!isCollapsed && (
                     <div className="flex items-center">
-                        <img src={logo} alt="Logo" className="w-6 h-6 mr-2" />
+                        <img src={'/logo.png'} alt="Logo" className="w-6 h-6 mr-2" />
                         <span className="md:text-2xl font-bold sm:text-sm text-gray-800">
                             Team-collab
                         </span>
