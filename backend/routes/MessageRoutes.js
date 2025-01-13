@@ -1,5 +1,5 @@
 const express = require('express');
-const MessageController = require('../controllers/Message/MessageController');
+const MessageController = require('../controllers/Message/Messagecontroller');
 const { getMessageForTeam, createMessage } = MessageController;
 const router = express.Router();
 
