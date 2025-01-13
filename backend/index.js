@@ -1,3 +1,4 @@
+require('dotenv').config();
 const cors = require('cors');
 const express = require('express');
 const http = require('http');
@@ -14,7 +15,7 @@ const notificationRoutes = require('./routes/NotificationRoutes');
 const fileRoutes = require('./routes/FileRoutes');
 const fileUpload = require('express-fileupload');
 const messageRoutes = require('./routes/MessageRoutes');
-
+const PORT = process.env.PORT || 3000;
 const app = express();
 const server = http.createServer(app);
 configureSocket(server);
@@ -56,4 +57,4 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/messages', messageRoutes);
 
 
-server.listen(3000, () => { console.log('sever listening on 3000') })
+server.listen(PORT, () => { console.log(`sever listening on ${PORT}`) })
