@@ -4,7 +4,10 @@ import { AuthContext } from "../context/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
 const SignIn = () => {
-  const URL = import.meta.env.VITE_API_BASE_URL_PROD || import.meta.env.DEV;
+  const URL =
+    import.meta.env.VITE_NODE_ENV === 'production'
+      ? import.meta.env.VITE_API_BASE_URL_PROD
+      : import.meta.env.VITE_API_BASE_URL_DEV;
 
   const { toast } = useToast();
   const { login } = useContext(AuthContext);
@@ -26,6 +29,7 @@ const SignIn = () => {
     setLoading(true);
 
     try {
+      console.log('Url', URL)
       const response = await fetch(`${URL}/users/signin`, {
         method: "POST",
         headers: {

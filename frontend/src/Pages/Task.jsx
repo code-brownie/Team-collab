@@ -3,7 +3,10 @@ import { AuthContext } from "../context/AuthContext";
 import TaskCard from "../components/TaskCard";
 
 const Task = () => {
-  const URL = import.meta.env.VITE_API_BASE_URL_PROD || import.meta.env.DEV;
+  const URL =
+    import.meta.env.VITE_NODE_ENV === 'production'
+      ? import.meta.env.VITE_API_BASE_URL_PROD
+      : import.meta.env.VITE_API_BASE_URL_DEV;
 
   const { userId, user } = useContext(AuthContext);
   const [tasks, setTasks] = useState([]);
