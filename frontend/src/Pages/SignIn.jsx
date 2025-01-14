@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import Spinner from "@/components/spinner";
 
 const SignIn = () => {
   const URL =
@@ -29,7 +30,6 @@ const SignIn = () => {
     setLoading(true);
 
     try {
-      console.log('Url', URL)
       const response = await fetch(`${URL}/users/signin`, {
         method: "POST",
         headers: {
@@ -112,7 +112,7 @@ const SignIn = () => {
                 : "bg-gray-800 hover:bg-gray-600"
                 }`}
             >
-              {loading ? "Signing in..." : "Sign in"}
+              {loading ? (<div className="flex justify-center"><Spinner height={'50'} width={'50'}color={'#FFFFFF'} /></div>) : "Sign in"}
             </button>
           </div>
 

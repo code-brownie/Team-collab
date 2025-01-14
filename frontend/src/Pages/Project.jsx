@@ -4,6 +4,7 @@ import ProjectCard from '../components/ProjectCard';
 import { AuthContext } from "../context/AuthContext";
 import { useToast } from '@/hooks/use-toast';
 import { Link } from 'react-router-dom';
+import Spinner from '@/components/spinner';
 
 const Project = () => {
     const [Projects, setProjects] = useState([]);
@@ -58,7 +59,7 @@ const Project = () => {
             {/* Loader */}
             {loading ? (
                 <div className="flex justify-center items-center min-h-[50vh]">
-                    <div className="animate-spin border-t-4 border-gray-800 border-solid rounded-full w-12 h-12 sm:w-16 sm:h-16"></div>
+                    <Spinner height={70} width={70} color={'#000000'} />
                 </div>
             ) : (
                 // Projects Grid

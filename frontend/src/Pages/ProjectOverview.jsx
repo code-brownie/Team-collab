@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { CalendarDays, Users, CheckCircle, ArrowLeft } from "lucide-react";
 import ProgressChart from "@/components/ChartSection";
+import Spinner from "@/components/spinner";
 
 
 const ProjectOverview = () => {
@@ -121,7 +122,7 @@ const ProjectOverview = () => {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+                <Spinner height={70} width={70}color={'#000000'}/>
             </div>
         );
     }

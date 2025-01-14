@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { toast } from "@/hooks/use-toast";
+import Spinner from "@/components/spinner";
 
 
 const SignUp = () => {
@@ -12,21 +13,19 @@ const SignUp = () => {
     password: "",
     confirmPassword: "",
   });
-
+  const [loading, setLoading] = useState(false);
   const URL =
     import.meta.env.VITE_NODE_ENV === 'production'
-        ? import.meta.env.VITE_API_BASE_URL_PROD 
-        : import.meta.env.VITE_API_BASE_URL_DEV;
-  
+      ? import.meta.env.VITE_API_BASE_URL_PROD
+      : import.meta.env.VITE_API_BASE_URL_DEV;
 
-  const [error, setError] = useState('');
+
   const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (formData.password !== formData.confirmPassword) {
       toast({
         title: "Error",
@@ -35,6 +34,7 @@ const SignUp = () => {
       });
       return;
     }
+    setLoading(true);
 
     try {
       const response = await fetch(`${URL}/users/signup`, {
@@ -51,13 +51,13 @@ const SignUp = () => {
 
       const data = await response.json();
       if (response.ok) {
-        alert("Sign-up successful!");
         login(data.token);
         toast({
           title: "SignUp Successful",
           description: "Welcome back! Redirecting to your dashboard.",
           variant: "default",
         });
+        setLoading(false);
         navigate('/dashboard');
       } else {
         toast({
@@ -68,7 +68,7 @@ const SignUp = () => {
       }
     } catch (error) {
       console.error("Error:", error);
-      setError(error.message);
+      setLoading(false);
       toast({
         title: "Unexpected Error",
         description: "An unexpected error occurred. Please try again later.",
@@ -146,16 +146,16 @@ const SignUp = () => {
               placeholder="Confirm your password"
               required
             />
-            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
           </div>
 
           {/* Sign Up Button */}
           <div className="mt-8">
             <button
+              disabled={loading}
               type="submit"
               className="w-full bg-gray-800 hover:bg-gray-600 text-white text-lg font-semibold py-3 px-4 rounded"
             >
-              Sign up
+              {loading ? (<div className="flex justify-center"><Spinner height={'50'} width={'50'} color={'#FFFFFF'}/></div>) : "SignUp"}
             </button>
           </div>
 

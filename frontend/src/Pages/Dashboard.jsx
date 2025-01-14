@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AuthContext } from "@/context/AuthContext";
 import SummaryCard from "../components/SummaryCard";
+import Spinner from "@/components/spinner";
 
 ChartJS.register(
   ArcElement,
@@ -231,7 +232,7 @@ const Dashboard = () => {
         </div>
       ) : (
         <div className="flex items-center justify-center h-[200px]">
-          <p className="text-gray-500">Loading...</p>
+          <p className="text-gray-500"><Spinner height={70} width={70}color={'#000000'}/></p>
         </div>
       )}
     </div>
