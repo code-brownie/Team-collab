@@ -1,15 +1,19 @@
+require('dotenv').config();
 const { Server } = require("socket.io");
 const Message = require('../models/Message');
 let io;
 const connectedUsers = {};
 const teamConnectedUsers = {};
-
+const Mode = process.env.NODE_ENV;
+const URL = Mode === 'production'
+    ? process.env.API_BASE_URL_PROD
+    : process.env.API_BASE_URL_DEV;
 const configureSocket = (server) => {
     console.log("Initializing Socket.IO server...");
-
+    console.log(URL + "in the socket configuration")
     io = new Server(server, {
         cors: {
-            origin: "http://localhost:5173",
+            origin: URL,
             credentials: true,
             methods: ["GET", "POST", "PUT", "DELETE"],
         },

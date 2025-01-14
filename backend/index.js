@@ -25,7 +25,7 @@ const URL = process.env.NODE_ENV === 'production'
     ? process.env.API_BASE_URL_PROD
     : process.env.API_BASE_URL_DEV;
 const allowedOrigins = [
-    'http://localhost:3000',
+    'http://localhost:5173',
     'https://brownie-team-collab.vercel.app',
     'https://team-collab.onrender.com'
 ];

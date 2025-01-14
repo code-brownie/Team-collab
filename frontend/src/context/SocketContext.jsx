@@ -4,8 +4,12 @@ import { io } from "socket.io-client";
 
 const SocketContext = createContext();
 
+const URL =
+    import.meta.env.VITE_NODE_ENV === 'production'
+        ? import.meta.env.VITE_SOCKET_BASE_URL_PROD
+        : import.meta.env.VITE_SOCKET_BASE_URL_DEV;
 // Create socket instance without connecting immediately
-const socket = io("http://localhost:3000", {
+const socket = io(URL, {
     withCredentials: true,
     autoConnect: false, // Don't connect automatically
     transports: ['websocket', 'polling'],
