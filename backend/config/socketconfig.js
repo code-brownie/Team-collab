@@ -6,8 +6,8 @@ const connectedUsers = {};
 const teamConnectedUsers = {};
 const Mode = process.env.NODE_ENV;
 const URL = Mode === 'production'
-    ? process.env.API_BASE_URL_PROD
-    : process.env.API_BASE_URL_DEV;
+    ? process.env.SOCKET_BASE_URL_PROD
+    : process.env.SOCKET_BASE_URL_DEV;
 const configureSocket = (server) => {
     console.log("Initializing Socket.IO server...");
     console.log(URL + "in the socket configuration")
