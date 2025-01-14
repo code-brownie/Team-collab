@@ -10,6 +10,7 @@ const DashboardSideBar = () => {
     const { userId, fetchUserDetails, logout, user } = useContext(AuthContext);
 
     useEffect(() => {
+        if (user) return;
         if (userId && userId.id) {
             fetchUserDetails(userId.id);
         }

@@ -19,10 +19,11 @@ const ProjectOverview = () => {
     const navigate = useNavigate();
     const { setProjectId } = useContext(AuthContext);
     const { id } = useParams();
-const URL =
-    import.meta.env.VITE_NODE_ENV === 'production'
-        ? import.meta.env.VITE_API_BASE_URL_PROD 
-        : import.meta.env.VITE_API_BASE_URL_DEV;    const getProject = async () => {
+    const URL =
+        import.meta.env.VITE_NODE_ENV === 'production'
+            ? import.meta.env.VITE_API_BASE_URL_PROD
+            : import.meta.env.VITE_API_BASE_URL_DEV;
+    const getProject = async () => {
         try {
             const response_project = await fetch(`${URL}/project/getOne?projectId=${id}`, {
                 method: "GET",

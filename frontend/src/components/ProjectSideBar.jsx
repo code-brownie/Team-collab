@@ -13,6 +13,7 @@ const ProjectSideBar = ({ isCollapsed, toggleSidebar }) => {
     const { unreadCount } = useContext(NotificationContext);
 
     useEffect(() => {
+        if (user) return;
         if (userId && userId.id) {
             fetchUserDetails(userId.id);
         }
