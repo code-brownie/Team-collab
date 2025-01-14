@@ -13,7 +13,7 @@ const configureSocket = (server) => {
     console.log(URL + "in the socket configuration")
     io = new Server(server, {
         cors: {
-            origin: URL,
+            origin: ['https://brownie-team-collab.vercel.app'],
             credentials: true,
             methods: ["GET", "POST", "PUT", "DELETE"],
         },
