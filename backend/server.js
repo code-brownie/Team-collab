@@ -3,7 +3,7 @@ const cors = require('cors');
 const express = require('express');
 const http = require('http');
 const { configureSocket } = require('./config/socketconfig');
-const connectToDB = require('./controllers/database/dbconnect');
+
 const cookieParser = require('cookie-parser')
 const taskRoutes = require('./routes/TaskRoutes');
 const userRoutes = require('./routes/UserRoutes');
@@ -15,6 +15,7 @@ const notificationRoutes = require('./routes/NotificationRoutes');
 const fileRoutes = require('./routes/FileRoutes');
 const fileUpload = require('express-fileupload');
 const messageRoutes = require('./routes/MessageRoutes');
+const initializeDatabase = require('./config/TableSetup');
 const PORT = process.env.PORT || 3000;
 const app = express();
 const server = http.createServer(app);
@@ -30,6 +31,7 @@ const allowedOrigins = [
     'https://team-collab.onrender.com'
 ];
 
+initializeDatabase();
 // Configure CORS middleware
 app.use(
     cors({
@@ -52,8 +54,7 @@ app.use(fileUpload({
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
-// connect to the database
-connectToDB();
+
 
 app.get('/', (req, res) => {
     res.send('Hello world');
