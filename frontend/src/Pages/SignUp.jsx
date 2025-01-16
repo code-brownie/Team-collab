@@ -51,7 +51,10 @@ const SignUp = () => {
 
       const data = await response.json();
       if (response.ok) {
-        login(data.token);
+        login({
+          accessToken: data.accessToken,
+          refreshToken: data.refreshToken
+        });
         toast({
           title: "SignUp Successful",
           description: "Welcome back! Redirecting to your dashboard.",
@@ -155,7 +158,7 @@ const SignUp = () => {
               type="submit"
               className="w-full bg-gray-800 hover:bg-gray-600 text-white text-lg font-semibold py-3 px-4 rounded"
             >
-              {loading ? (<div className="flex justify-center"><Spinner height={'50'} width={'50'} color={'#FFFFFF'}/></div>) : "SignUp"}
+              {loading ? (<div className="flex justify-center"><Spinner height={'50'} width={'50'} color={'#FFFFFF'} /></div>) : "SignUp"}
             </button>
           </div>
 

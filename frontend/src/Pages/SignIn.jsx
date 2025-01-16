@@ -41,7 +41,10 @@ const SignIn = () => {
       const data = await response.json();
 
       if (response.ok) {
-        login(data.token);
+        login({
+          accessToken: data.accessToken,
+          refreshToken: data.refreshToken
+        });
         toast({
           title: "Login Successful",
           description: "Welcome back! Redirecting to your dashboard.",
@@ -112,7 +115,7 @@ const SignIn = () => {
                 : "bg-gray-800 hover:bg-gray-600"
                 }`}
             >
-              {loading ? (<div className="flex justify-center"><Spinner height={'50'} width={'50'}color={'#FFFFFF'} /></div>) : "Sign in"}
+              {loading ? (<div className="flex justify-center"><Spinner height={'50'} width={'50'} color={'#FFFFFF'} /></div>) : "Sign in"}
             </button>
           </div>
 

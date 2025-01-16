@@ -6,21 +6,34 @@ const Project = require("../../models/Project");
 const signUp = async (req, res) => {
     try {
         const { name, email, password } = req.body;
+
         const data = {
             name,
             email,
+            refreshToken,
             password: await bcrypt.hash(password, 10),
         };
         //save the user
         const user = await User.create(data);
         // generate the token
         if (user) {
-            let token = jwt.sign({ id: user.id }, process.env.secretKey);
-
+            const accessToken = jwt.sign(
+                { id: user.id },
+                process.env.secretKey,
+                { expiresIn: '2h' }
+            );
+            const refreshToken = jwt.sign(
+                { id: user.id },
+                process.env.refreshTokenSecret,
+                { expiresIn: '7d' }
+            );
             res.cookie('jwt', token, { maxAge: 2 * 60 * 60 * 1000, httpOnly: true });
-            console.log("user", JSON.stringify(user, null, 2));
-            console.log(token);
-            return res.status(201).json({ user: user, token: token });
+
+            return res.status(201).json({
+                user: user,
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            });
         }
         else {
             return res.status(409).json({ Message: "Details are not correct" });
@@ -33,33 +46,46 @@ const signUp = async (req, res) => {
 const signIn = async (req, res) => {
     try {
         const { email, password } = req.body;
-        //find a user by email
         const user = await User.findOne({
-            where: {
-                email: email
-            }
+            where: { email: email }
         });
 
-        if (user) {
-            const isSame = await bcrypt.compare(password, user.password);
+        if (user && await bcrypt.compare(password, user.password)) {
 
-            if (isSame) {
-                let token = jwt.sign({ id: user.id }, process.env.secretKey);
+            const accessToken = jwt.sign(
+                { id: user.id },
+                process.env.secretKey,
+                { expiresIn: '2h' }
+            );
 
-                res.cookie("jwt", token, { maxAge: 2 * 60 * 60 * 1000, httpOnly: true });
-                console.log("user", JSON.stringify(user, null, 2));
-                console.log(token);
-                //send user data
-                return res.status(201).json({ user: user, token: token });
-            } else {
-                return res.status(401).send("Authentication failed");
-            }
-        } else {
-            return res.status(401).send("Authentication failed");
+
+            const refreshToken = jwt.sign(
+                { id: user.id },
+                process.env.refreshTokenSecret,
+                { expiresIn: '7d' }
+            );
+
+            await User.update(
+                { refreshToken: refreshToken },
+                { where: { id: user.id } }
+            );
+
+            res.cookie("jwt", accessToken, {
+                maxAge: 2 * 60 * 60 * 1000,
+                httpOnly: true
+            });
+
+            return res.status(201).json({
+                user: user,
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            });
         }
+        return res.status(401).send("Authentication failed");
     }
     catch (err) {
         console.log(err);
+        return res.status(500).send("Internal server error");
     }
 };
 const getAllUser = async (req, res) => {
@@ -112,4 +138,39 @@ const getUserById = async (req, res) => {
         return res.status(500).send('Internal server error');
     }
 }
-module.exports = { signUp, signIn, getAllUser, getUserProjects, getUserById };
+const refreshToken = async (req, res) => {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+        return res.status(401).json({ message: "Refresh token required" });
+    }
+
+    try {
+
+        const decoded = jwt.verify(refreshToken, process.env.refreshTokenSecret);
+
+
+        const user = await User.findOne({
+            where: {
+                id: decoded.id,
+                refreshToken: refreshToken
+            }
+        });
+
+        if (!user) {
+            return res.status(401).json({ message: "Invalid refresh token" });
+        }
+
+
+        const newAccessToken = jwt.sign(
+            { id: user.id },
+            process.env.secretKey,
+            { expiresIn: '2h' }
+        );
+
+        return res.json({ accessToken: newAccessToken });
+    } catch (error) {
+        return res.status(401).json({ message: "Invalid refresh token" });
+    }
+};
+module.exports = { signUp, signIn, getAllUser, getUserProjects, getUserById, refreshToken };
