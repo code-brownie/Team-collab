@@ -36,7 +36,7 @@ const DashboardSideBar = () => {
                         <img
                             src='/logo.png'
                             alt="Logo"
-                            className="w-6 h-6 mr-2"
+                            className="w-5 h-5 mr-2"
                         />
                         <span className="md:text-2xl font-bold sm:text-sm text-gray-800">Team-collab</span>
                     </div>
@@ -53,7 +53,8 @@ const DashboardSideBar = () => {
                                 to={link.path}
                                 className="flex items-center px-4 py-3 font-semibold text-gray-700 hover:bg-gray-200 rounded-lg transition"
                             >
-                                <span className="mr-3">{link.icon}</span>
+                                <span className="mr-3"><link.icon.name /></span>
+
                                 {!isCollapsed && link.name}
                             </Link>
                         </li>

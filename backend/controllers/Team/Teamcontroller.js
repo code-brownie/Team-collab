@@ -287,4 +287,24 @@ const JoinTeam = async (req, res) => {
     }
 }
 
-module.exports = { TeamCreation, AddUsersToTeam, getUserofTeam, getAllTeam, updateMembersOfTeam, JoinTeam };
+const deleteTeam = async (req, res) => {
+    const {id} = req.params;
+    if (!id) return res.status(400).json({ message: 'Team id not found' });
+
+    try {
+        // find the team
+        console.log('teamId', id);
+        const team = await Team.findByPk(id);
+        if (team) {
+            await team.destroy();
+            return res.status(200).json('Team deleted successfully');
+        }
+        else {
+            return res.status(400).json({ message: 'Team not found' });
+        }
+    } catch (error) {
+        console.log('error in deleteing file', error);
+        return res.status(500).send('Internal server error');
+    }
+}
+module.exports = { TeamCreation, AddUsersToTeam, getUserofTeam, getAllTeam, updateMembersOfTeam, JoinTeam, deleteTeam };

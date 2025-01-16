@@ -15,36 +15,36 @@ const TeamCard = ({ team, currentUserId, updateTeamMembers }) => {
     const [teamMembers, setTeamMembers] = useState(team.Users);
     const currentUser = team.Users.find((user) => user.id === currentUserId);
     const currentRole = currentUser?.TeamUser?.role || "Member";
-const URL =
-    import.meta.env.VITE_NODE_ENV === 'production'
-        ? import.meta.env.VITE_API_BASE_URL_PROD 
-        : import.meta.env.VITE_API_BASE_URL_DEV;    const handleSubmit = async (updatedMembers) => {
-        try {
-            const response = await fetch(`${URL}/team/updateTeam`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    teamId: team.id,
-                    users: updatedMembers.map((member) => member.id),
-                }),
-            });
+    const URL =
+        import.meta.env.VITE_NODE_ENV === 'production'
+            ? import.meta.env.VITE_API_BASE_URL_PROD
+            : import.meta.env.VITE_API_BASE_URL_DEV; const handleSubmit = async (updatedMembers) => {
+                try {
+                    const response = await fetch(`${URL}/team/updateTeam`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            teamId: team.id,
+                            users: updatedMembers.map((member) => member.id),
+                        }),
+                    });
 
-            if (response.ok) {
-                toast({
-                    title: "Team members updated successfully",
-                    variant: "default",
-                });
-                updateTeamMembers(team.id, updatedMembers);
-            }
-        } catch (error) {
-            toast({
-                title: "Error",
-                description: "Failed to update team members.",
-                variant: "destructive",
-            });
-            console.error("Error updating members:", error);
-        }
-    };
+                    if (response.ok) {
+                        toast({
+                            title: "Team members updated successfully",
+                            variant: "default",
+                        });
+                        updateTeamMembers(team.id, updatedMembers);
+                    }
+                } catch (error) {
+                    toast({
+                        title: "Error",
+                        description: "Failed to update team members.",
+                        variant: "destructive",
+                    });
+                    console.error("Error updating members:", error);
+                }
+            };
 
     return (
         <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-4 md:p-6 w-full">
@@ -67,11 +67,11 @@ const URL =
 
             <div className="flex flex-wrap gap-2 mt-4 justify-end">
                 {/* Join Team Dialog */}
-                <button
+                {!currentUser && <button
                     onClick={() => setJoinDialogOpen(true)}
                     className="px-3 md:px-4 py-2 text-sm border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-md transition-colors">
                     Join Team
-                </button>
+                </button>}
                 <DialogWrapper
                     isOpen={isJoinDialogOpen}
                     onOpenChange={setJoinDialogOpen}

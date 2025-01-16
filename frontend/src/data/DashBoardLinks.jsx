@@ -1,65 +1,35 @@
+import { 
+  LayoutDashboard, 
+  Users, 
+  FolderKanban 
+} from "lucide-react";
+
 export const links = [
   {
     id: 1,
     name: 'Dashboard',
     path: '/dashboard',
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-5 w-5"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M8 6h13M8 12h13m-7 6h7M3 6h.01M3 12h.01M3 18h.01"
-        />
-      </svg>
-    ),
+    icon: {
+      name: LayoutDashboard,
+      size: 20
+    }
   },
   {
     id: 2,
     name: 'Teams',
     path: '/teams',
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-5 w-5"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M17 8h2a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2v-9a2 2 0 012-2h2m3-3h4m-4 0a3 3 0 106 0m-6 0H7a2 2 0 00-2 2v3h14V7a2 2 0 00-2-2h-3z"
-        />
-      </svg>
-    ),
+    icon: {
+      name: Users,
+      size: 20
+    }
   },
   {
     id: 3,
     name: 'Projects',
     path: '/project',
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-5 w-5"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M12 8v4l3 3M12 12a9 9 0 100-18 9 9 0 000 18z"
-        />
-      </svg>
-    ),
-  },
+    icon: {
+      name: FolderKanban,
+      size: 20
+    }
+  }
 ];

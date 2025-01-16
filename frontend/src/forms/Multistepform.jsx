@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import CreateTeamForm from "./CreateTeam";
 import CreateProjectForm from "./CreateProject";
 import AddMembersForm from "./AddTeam";
@@ -9,11 +9,12 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 
 const MultiStepForm = () => {
-const URL =
-    import.meta.env.VITE_NODE_ENV === 'production'
-        ? import.meta.env.VITE_API_BASE_URL_PROD 
-        : import.meta.env.VITE_API_BASE_URL_DEV;    const { userId, setProjectId } = useContext(AuthContext);
-    const UserId = userId.id;
+    const URL =
+        import.meta.env.VITE_NODE_ENV === 'production'
+            ? import.meta.env.VITE_API_BASE_URL_PROD
+            : import.meta.env.VITE_API_BASE_URL_DEV;
+    const { userId, setProjectId } = useContext(AuthContext);
+    const [UserId, setUserId] = useState(null);
     const [currentStep, setCurrentStep] = useState(1);
     const [teamData, setTeamData] = useState({ teamName: "", description: "" });
     const [projectData, setProjectData] = useState({
@@ -21,11 +22,18 @@ const URL =
         projectDescription: "",
         deadline: "",
     });
+    let teamId, joinCode;
     const [members, setMembers] = useState([]);
     const navigate = useNavigate();
     const nextStep = () => {
         if (currentStep < 3) setCurrentStep(currentStep + 1);
     };
+    
+    useEffect(() => {
+        if (userId) {
+            setUserId(userId.id);
+        }
+    }, [userId]);
 
     const backStep = () => {
         if (currentStep > 1) setCurrentStep(currentStep - 1);
@@ -52,8 +60,8 @@ const URL =
                 }),
             });
             const createdTeam = await team_response.json();
-            const teamId = createdTeam.Team.id;
-
+            teamId = createdTeam.Team.id;
+            joinCode = createdTeam.joinCode;
             // Adding the members to the Team
             await fetch(`${URL}/team/${teamId}/users`, {
                 method: "POST",
@@ -99,13 +107,14 @@ const URL =
                 navigate(`/project/${projectId}/overview`);
             }
 
-
         } catch (error) {
             toast({
                 title: "Try again",
                 description: "Failed to create project.",
                 variant: "destructive",
             });
+            // revert the changes and delete the team
+            await fetch(`${URL}/team/delete/${teamId}`);
             console.log(error);
         }
     };
@@ -131,6 +140,7 @@ const URL =
                         setMembers={setMembers}
                         backStep={backStep}
                         handleSubmit={handleSubmit}
+                        joinCode={joinCode}
                     />
                 )}
             </div>

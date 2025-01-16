@@ -10,6 +10,7 @@ const ProjectLayout = () => {
         const handleResize = () => {
             const mobile = window.innerWidth < 1024;
             setIsMobile(mobile);
+            setShowSidebar(!showSidebar);
         };
 
         window.addEventListener('resize', handleResize);
@@ -24,7 +25,7 @@ const ProjectLayout = () => {
         <div className="flex h-screen overflow-hidden bg-gray-100">
             {/* Overlay */}
             {isMobile && showSidebar && (
-                <div 
+                <div
                     className="fixed inset-0 bg-black bg-opacity-50 z-40"
                     onClick={() => setShowSidebar(false)}
                 />
@@ -38,7 +39,7 @@ const ProjectLayout = () => {
                 ${showSidebar ? 'translate-x-0' : 'translate-x-0 w-16'}
                 border-r border-gray-200 shadow-sm
             `}>
-                <ProjectSideBar 
+                <ProjectSideBar
                     isCollapsed={!showSidebar}
                     toggleSidebar={toggleSidebar}
                 />

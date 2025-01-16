@@ -3,19 +3,23 @@
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import ShowUserList from "../components/ShowUserList";
+import DialogWrapper from "@/components/DailogWrapper";
+import AddMember from "./AddMember";
 
-const AddMembersForm = ({ members, setMembers, backStep, handleSubmit }) => {
+const AddMembersForm = ({ members, setMembers, backStep, handleSubmit, joinCode }) => {
     const { userId } = useContext(AuthContext);
-    const UserId = userId.id;
+    const [UserId, setUserId] = useState(null);
+    const [isAddDialogOpen, setAddDialogOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [allUsers, setAllUsers] = useState([]);
     const [searching, setSearching] = useState(false);
     const [submitting, setSubmitting] = useState(false);
-const URL =
-    import.meta.env.VITE_NODE_ENV === 'production'
-        ? import.meta.env.VITE_API_BASE_URL_PROD 
-        : import.meta.env.VITE_API_BASE_URL_DEV;    useEffect(() => {
+    const URL =
+        import.meta.env.VITE_NODE_ENV === 'production'
+            ? import.meta.env.VITE_API_BASE_URL_PROD
+            : import.meta.env.VITE_API_BASE_URL_DEV;
+    useEffect(() => {
         const fetchUsers = async () => {
             try {
                 const response = await fetch(`${URL}/users/all`);
@@ -26,9 +30,11 @@ const URL =
                 console.error("Error fetching users:", error);
             }
         };
-
-        fetchUsers();
-    }, []);
+        if (userId && userId.id) {
+            setUserId(userId.id);
+            fetchUsers();
+        }
+    }, [userId]);
 
     const handleSearch = (e) => {
         const term = e.target.value.trim();
@@ -74,7 +80,16 @@ const URL =
 
     return (
         <form onSubmit={handleFormSubmit}>
-            <h2 className="text-xl font-semibold mb-4">Add Members</h2>
+            <div className="flex justify-between">
+                <h2 className="text-xl font-semibold mb-4">Add Members</h2>
+                <button
+                    type="button"
+                    onClick={() => setAddDialogOpen(true)}
+                    className="bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-500"
+                >
+                    Invite
+                </button>
+            </div>
             <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">Search Members</label>
                 <input
@@ -119,6 +134,16 @@ const URL =
                     {submitting ? "Submitting..." : "Submit"}
                 </button>
             </div>
+            <DialogWrapper
+                isOpen={isAddDialogOpen}
+                onOpenChange={setAddDialogOpen}
+                title="Add Member"
+            >
+                <AddMember
+                    joinCode={joinCode}
+                    onClose={() => setAddDialogOpen(false)}
+                />
+            </DialogWrapper>
         </form>
     );
 };

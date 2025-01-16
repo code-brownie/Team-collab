@@ -10,6 +10,7 @@ const DashboardLayout = () => {
         const handleResize = () => {
             const mobile = window.innerWidth < 1024;
             setIsMobile(mobile);
+            setShowSidebar(!showSidebar);
         };
 
         window.addEventListener('resize', handleResize);

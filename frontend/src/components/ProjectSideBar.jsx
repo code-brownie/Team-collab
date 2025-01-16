@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
 import { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { links } from "../data/ProjectLinks";
+
 import CloseButton from "./CloseButton";
 import { AuthContext } from "../context/AuthContext";
 import { NotificationContext } from "../context/NotificationContext";
 import { Badge } from "@/components/ui/badge";
 import UserProfileSection from "./UserProfile";
+import { links } from "@/data/ProjectLinks";
 
 const ProjectSideBar = ({ isCollapsed, toggleSidebar }) => {
     const { userId, fetchUserDetails, logout, user, projectId } = useContext(AuthContext);
@@ -20,7 +21,6 @@ const ProjectSideBar = ({ isCollapsed, toggleSidebar }) => {
     }, [userId, fetchUserDetails]);
 
     const handleLogout = () => {
-        console.log("User logged out");
         logout();
     };
 
@@ -35,7 +35,7 @@ const ProjectSideBar = ({ isCollapsed, toggleSidebar }) => {
             <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200">
                 {!isCollapsed && (
                     <div className="flex items-center">
-                        <img src={'/logo.png'} alt="Logo" className="w-6 h-6 mr-2" />
+                        <img src={'/logo.png'} alt="Logo" className="w-5 h-5 mr-2" />
                         <span className="md:text-2xl font-bold sm:text-sm text-gray-800">
                             Team-collab
                         </span>
@@ -53,7 +53,7 @@ const ProjectSideBar = ({ isCollapsed, toggleSidebar }) => {
                                 to={link.path.replace(":id", projectId)}
                                 className="flex items-center px-4 py-3 font-semibold text-gray-700 hover:bg-gray-200 rounded-lg transition group relative"
                             >
-                                <span className="mr-3">{link.icon}</span>
+                                <span className="mr-3">{<link.icon.name />}</span>
                                 {!isCollapsed && (
                                     <div className="flex items-center justify-between flex-grow">
                                         <span>{link.name}</span>
