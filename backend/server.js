@@ -16,6 +16,7 @@ const fileRoutes = require('./routes/FileRoutes');
 const fileUpload = require('express-fileupload');
 const messageRoutes = require('./routes/MessageRoutes');
 const initializeDatabase = require('./config/TableSetup');
+const { initializeTaskMonitoring } = require('./services/TaskMonitoringServices');
 const PORT = process.env.PORT || 3000;
 const app = express();
 const server = http.createServer(app);
@@ -72,4 +73,8 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/messages', messageRoutes);
 
 console.log('url', URL);
-server.listen(PORT, () => { console.log(`sever listening on ${PORT} in ${Mode}`) })
+server.listen(PORT, () => {
+    console.log(`sever listening on ${PORT} in ${Mode}`)
+    initializeTaskMonitoring();
+    console.log('Task monitoring started...')
+})

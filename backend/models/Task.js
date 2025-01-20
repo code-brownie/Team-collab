@@ -26,6 +26,10 @@ const Task = sequelize.define('Task', {
     deadline: {
         type: DataTypes.DATE,
     },
+    isExpired: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    }
 });
 
 module.exports = Task;

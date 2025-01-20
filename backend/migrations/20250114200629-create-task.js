@@ -52,7 +52,7 @@ module.exports = {
       updatedAt: {
         type: Sequelize.DATE,
         allowNull: false
-      }
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {

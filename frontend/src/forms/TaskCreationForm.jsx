@@ -3,13 +3,16 @@ import { useState } from 'react';
 
 const TaskCreationForm = ({ users, onSubmit, setCreateTaskDialogOpen }) => {
   const [title, setTitle] = useState('');
+  const [error, setError] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('Medium');
   const [deadline, setDeadline] = useState('');
   const [assignedTo, setAssignedTo] = useState('');
+  const today = new Date().toISOString().split('T')[0];
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (today > deadline) { setError('Please select a valid date'); return; }
     const newTask = {
       title,
       description,
@@ -17,6 +20,7 @@ const TaskCreationForm = ({ users, onSubmit, setCreateTaskDialogOpen }) => {
       deadline,
       assignedId: assignedTo ? users.find(user => user.id === assignedTo)?.id : null,
     };
+
     onSubmit(newTask);
   };
 
@@ -74,10 +78,11 @@ const TaskCreationForm = ({ users, onSubmit, setCreateTaskDialogOpen }) => {
           type="date"
           id="deadline"
           value={deadline}
-          onChange={(e) => setDeadline(e.target.value)}
+          onChange={(e) => { setDeadline(e.target.value); setError('') }}
           className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           required
         />
+        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
       </div>
 
       <div>
